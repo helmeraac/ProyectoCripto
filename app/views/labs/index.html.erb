@@ -1,0 +1,361 @@
+<!--<p id="notice"><%= notice %></p>
+   <h1>Labs</h1>
+   
+   <table>
+     <thead>
+       <tr>
+         <th colspan="3"></th>
+       </tr>
+     </thead>
+   
+     <tbody>
+       <% @labs.each do |lab| %>
+         <tr>
+           <td><%= link_to 'Show', lab %></td>
+           <td><%= link_to 'Edit', edit_lab_path(lab) %></td>
+           <td><%= link_to 'Destroy', lab, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+         </tr>
+       <% end %>
+     </tbody>
+   </table>
+   
+   <br>
+   
+   <%= link_to 'New Lab', new_lab_path %>-->
+<% content_for :head do %>
+<!-- Vendor CSS -->
+<link href="/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/sweetalert2/dist/sweetalert.css" rel="stylesheet">
+<link href="/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+<link href="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="/vendors/weekline/jquery.weekLine-white.css " rel="stylesheet" />
+<!-- CSS -->
+<link href="/css/app_1.min.css" rel="stylesheet">
+<link href="/css/app_2.min.css" rel="stylesheet">
+<% end %>
+<%= render partial: 'layouts/console/header' %>
+<section id="main">
+   <%= render partial: 'layouts/console/sideBar' %>
+   <section id="content">
+      <div class="container">
+         <div class="block-header" id="main-header">
+            <h2>SEDES</h2>
+         </div>
+
+         <div class="card" id="form-lab-new" style="display:none;">
+                <!--TODO: Metodo del form y name de los campos-->
+                <form class="form-horizontal" role="form" id="newForm">
+                    <div class="card-header">
+                        <h2>Nueva sede
+                        </h2>
+                    </div>
+
+                    <div class="card-body card-padding" style="padding-bottom: 0px;">
+                        <div class="form-group">
+                            <label for="inputCity" class="col-sm-2 control-label">Ciudad:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                   <select class="selectpicker" id="inputCity" name="lab[city]">
+                                         <%= render partial: 'partials/cities' %>
+                                    </select>
+                                </div>
+                            </div>
+                            <label for="inputAddress" class="col-sm-1 control-label">Dirección:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                    <input type="text" class="form-control input-sm" id="inputAddress"
+                                            placeholder="Dirección" name="lab[address]">
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-3 text-center">
+                                <button type="submit" class="btn bgm-green waves-effect">AÑADIR SEDE</button>
+                            </div>
+                            <div class="col-sm-3 text-center">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="cancelCreate()">Cancelar</button>
+                     </div>
+                        </div>
+                        <br>
+                    </div>
+                </form>
+            </div>
+            <div class="card" id="form-lab-edit" style="display:none;">
+                <!--TODO: Metodo del form y name de los campos-->
+                <form class="form-horizontal" role="form" id="editForm" action="" >
+                    <div class="card-header">
+                        <h2>Editar sede
+                        </h2>
+                    </div>
+
+                    <div class="card-body card-padding" style="padding-bottom: 0px;">
+                        <div class="form-group">
+                            <label for="inputEditCity" class="col-sm-2 control-label">Ciudad:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                   <select class="selectpicker" id="inputEditCity" name="lab[city]">
+                                         <%= render partial: 'partials/cities' %>
+                                    </select>
+                                </div>
+                            </div>
+                            <label for="inputEditAddress" class="col-sm-1 control-label">Dirección:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                    <input type="text" class="form-control input-sm" id="inputEditAddress"
+                                            placeholder="Dirección" name="lab[address]">
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="form-group">
+                            <div class="col-sm-offset-1 col-sm-9 text-center">
+                                <button type="submit" class="btn bgm-green waves-effect">GUARDAR SEDE</button>
+                            </div>
+                            <div class="col-sm-3 text-center">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="cancelEdit()">Cancelar</button>
+                     </div>
+                        </div>
+                        <br>
+                    </div>
+                </form>
+            </div>
+
+      <div class="card">
+         <div class="card-header">
+            <h2 style="display: inline-block;">Lista de sedes
+            </h2>
+            <button type="button" class="btn btn-success btn-sm pull-right" style="display: inline-block; width: 160px; height: 35px;" onclick= "createLab()">Crear Sede</button>
+         </div>
+         <div class="table-responsive">
+            <table id="data-table-basic" class="table table-striped display">
+               <thead>
+                  <tr>
+                     <!-- TODO: Campos para mostrar en la tabla de todas las sedes -->
+                     <th>Ciudad</th>
+                     <th>Dirección</th>
+                     <th>Acciones</th>
+                  </tr>
+               </thead>
+               <tfoot>
+                  <tr>
+                     <th>Ciudad</th>
+                     <th>Dirección</th>
+                     <th>Acciones</th>
+                  </tr>
+               </tfoot>
+               <tbody>
+                  <% @labs.each do |lab| %>
+                  <tr>
+                     <td><%=lab.city%></td>
+                     <td><%=lab.address%></td>
+                     <td>
+                    <%= link_to lab_time_ranges_path(lab.id),{class: "btn btn-primary btn-icon waves-effect waves-circle waves-float"} do %>
+                        <i class="zmdi zmdi-time"></i>
+                        <% end %>
+                        <%= button_tag(type: 'button', class: "btn btn-primary btn-icon waves-effect waves-circle waves-float", onclick: "editLab(this)", data: {id: lab.id,address: lab.address,city:lab.city} )do %>
+                        <i class="zmdi zmdi-edit"></i>
+                        <% end %>
+                        <!--TODO: Agregar id al arreglo de datos-->
+                        <%= button_tag(type: 'button', class: "btn btn-danger btn-icon waves-effect waves-circle waves-float", onclick: "deleteLab(this)", data: {id: lab.id} )do %>
+                        <i class="zmdi zmdi-delete"></i>
+                        <% end %>
+                     </td>
+                  </tr>
+                  <% end %>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </section>
+</section>
+
+<%= render partial: 'layouts/console/footer' %>
+<% content_for :bottom do %>
+<!-- Javascript Libraries -->
+<script src="/vendors/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/vendors/bower_components/Waves/dist/waves.min.js"></script>
+<script src="/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+<script src="/vendors/bower_components/sweetalert2/dist/sweetalert.min.js"></script>
+<script src="/vendors/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script src="/vendors/fileinput/fileinput.min.js"></script>
+<script src="/vendors/bower_components/moment/min/moment.min.js"></script>
+<script src="/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/vendors/weekline/jquery.weekLine.js"></script> 
+<!-- Placeholder for IE9 -->
+<!--[if IE 9 ]>
+<script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+<![endif]-->
+<script src="/js/app.min.js"></script>
+<script type="text/javascript">
+   $(document).ready(function() {
+       $('#data-table-basic').DataTable({
+            scrollX: true,
+            scrollCollapse: true,
+            "columns": [
+                { "width": "150px" },
+                { "width": "525px" },
+                { "width": "155px" },
+            ]
+        });
+   
+   } );
+   
+
+                function createLab(){
+                   if($('#form-lab-edit').is(':visible')){   
+                       $('#form-lab-edit').hide('slow');
+                   }
+                   $('#form-lab-new').show('slow');
+                
+                    $(document).scrollTop($("#content").offset().top);
+               }
+
+               
+
+               function cancelCreate(){
+                   $('#form-lab-new').hide('slow');
+               }
+   
+
+            $('#newForm').submit(function(e){
+                    var formData = new FormData($(this)[0]);
+           
+                    $.ajax({
+                        url: "labs/",
+                        data: formData,
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        type: "POST",
+                        
+                        success: function(data){
+                            swal({
+                                    title: "", 
+                                    text: data.success, 
+                                    type: "success"
+                                },function(){
+                                    location.reload();
+                                });
+                        },
+                        error: function(data){
+                            swal("", data.responseJSON.errors, "error")
+                        }
+                    });
+                    e.preventDefault();
+                });
+
+   
+                function editLab(obj){
+                   if($('#form-lab-new').is(':visible')){   
+                       $('#form-lab-new').hide('slow');
+                   }
+                   $('#form-lab-edit').show('slow');
+                   $('#inputEditCity').val($(obj).data('city')).change();
+                   $('#inputEditAddress').val($(obj).data('address'));
+                   var action = 'labs/' + ($(obj).data('id'))
+                    $('#editForm').attr('data-action', action);
+                    $(document).scrollTop($("#content").offset().top);
+
+               }
+               function cancelEdit(){
+                   $('#form-lab-edit').hide('slow');
+               }
+               
+               $('#editForm').submit(function(e){
+                    var formData = new FormData($(this)[0]);
+                
+                    var formAction = $(this).attr('data-action');
+                    $.ajax({
+                        type: "PUT",
+                        url: formAction,
+                        data: formData,
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        
+                        success: function(data){
+                            swal({
+                                    title: "", 
+                                    text: data.success, 
+                                    type: "success"
+                                },function(){
+                                    location.reload();
+                                });
+                        },
+                        error: function(data){
+                            swal("", data.responseJSON.errors, "error")
+                        }
+                    });
+
+                    e.preventDefault();
+                });
+   
+   
+   
+   
+   
+   
+   
+   
+   
+  
+  
+  
+   function deleteLab(obj){
+                   swal({
+                   title: "Está seguro?",
+                   text: "No se podran recuperar lo datos de la sede en un futuro",
+                   type: "warning",
+                   showCancelButton: true,
+                   confirmButtonColor: "#DD6B55",
+                   confirmButtonText: "Confirmar",
+                   closeOnConfirm: false
+                   },
+                   function(){
+   
+   
+                   swal({
+                   title: "Totalmente seguro?",
+                   text: "Esta operación borrara todos los administradores, citas y resultados de pacientes relacionados con esta sede sin poder recuperar la información. Esta totalmente seguro de que desea continuar?",
+                   type: "warning",
+                   showCancelButton: true,
+                   confirmButtonColor: "#DD6B55",
+                   confirmButtonText: "Confirmar",
+                   closeOnConfirm: false
+                   },function(){
+   
+                       $.ajax({
+                           url: 'labs/' + $(obj).data('id'),
+                           type: 'DELETE',
+                           success: function(result) {
+                               swal({
+                                   title: "", 
+                                   text: result.success, 
+                                   type: "success"
+                               },function(){
+                                   location.reload();
+                               });
+                           },
+                           error: function(data){
+                           swal("", data.responseJSON.error, "error")
+                       }
+                       });
+   
+                   });
+   
+                      
+                   });
+                   
+                   }
+   
+   
+                   
+</script>
+<% end %>

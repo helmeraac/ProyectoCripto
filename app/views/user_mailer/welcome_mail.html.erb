@@ -1,0 +1,22 @@
+<div class="mail-container">
+    <div class="banner-container">
+        <%= email_image_tag("logo.png", class: "banner-image") %>
+    </div>
+    <div class="mail-text">
+        <p>Hola, <%= @user.name %>:</p>
+        <p>Bienvenido a Citopat de Colombia, se le ha creado un usuario con el cual podrá acceder
+        a las diferentes funcionalidades de la plataforma tales como: programar citas, 
+        solicitar recogida de muestras, descargar resultados y otras. Para acceder se 
+        le han asignado las siguientes credenciales:</p>
+        <div class="credentials">
+            <p><strong>Usuario:</strong><%= @user.email %></p>
+            <p><strong>Contraseña:</strong><%= @generated_password %></p>
+            <p style="color: #716868;">Puede acceder a la plataforma a traves del siguiente <a href="<%=@url%>">LINK</a></p>
+        </div>
+        <div class="mail-footer">
+            **Por motivos de seguridad se recomienda una vez haya ingresado a la plataforma cambiar la 
+            contraseña que se le asignó**Esto ha sido una notificación automática, por favor no responder 
+            a este correo**
+        </div>
+    </div>
+</div>

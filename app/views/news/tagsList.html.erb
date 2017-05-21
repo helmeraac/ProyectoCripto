@@ -1,0 +1,144 @@
+
+
+<% content_for :head do %>
+
+<!-- Vendor CSS -->
+<link href="/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/sweetalert2/dist/sweetalert.css" rel="stylesheet">
+<link href="/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+<link href="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<!-- CSS -->
+<link href="/css/app_1.min.css" rel="stylesheet">
+<link href="/css/app_2.min.css" rel="stylesheet">
+<link href="/css/map_style.css" rel="stylesheet">
+
+<% end %>
+
+<%= render partial: 'layouts/console/header' %>
+
+<section id="main">
+
+    <%= render partial: 'layouts/console/sideBar' %>
+
+    <section id="content">
+        <div class="container">
+            <div class="block-header">
+                <h2>NOTICIAS</h2>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 style="display: inline-block;">Lista de tags
+                    </h2>
+                    <button type="button" class="btn btn-success btn-sm pull-right" style="display: inline-block; width: 160px; height: 35px;" onclick="location.href='/tags/new';">
+                        Nuevo tag
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="data-table-basic" class="table table-striped display">
+                        <thead>
+                        <tr>
+                          <!-- TODO: Campos para mostrar en la tabla de todos los usuarios -->
+                            <th>Nombre</th>
+                            <th>Editar/Eliminar</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Editar/Eliminar</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        <% @tags.each do |tag| %>
+                        <tr>
+                            <td><%= tag.name %></td>
+                            <td>
+                                <%= button_tag(type: 'button', class: "btn btn-warning btn-icon waves-effect waves-circle waves-float", onclick: "") do %>
+                                    <i class="zmdi zmdi-edit"></i>
+                                <% end %>
+                                <%= button_tag(type: 'button', class: "btn btn-danger btn-icon waves-effect waves-circle waves-float", onclick: "deleteTag(this);", data: {id: tag.id})do %>
+                                    <i class="zmdi zmdi-delete"></i>
+                                <% end %>
+                                
+                            </td>
+                        </tr>
+                        <% end %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</section>
+
+<%= render partial: 'layouts/console/footer' %>
+
+<% content_for :bottom do %>
+<!-- Javascript Libraries -->
+<script src="/vendors/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<script src="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/vendors/bower_components/Waves/dist/waves.min.js"></script>
+<script src="/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+<script src="/vendors/bower_components/sweetalert2/dist/sweetalert.min.js"></script>
+<script src="/vendors/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+
+
+<!-- Placeholder for IE9 -->
+<!--[if IE 9 ]>
+    <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+<![endif]-->
+
+<script src="/js/app.js"></script>
+
+<script>
+  $(document).ready(function() {
+        $('#data-table-basic').DataTable({
+            scrollX: true,
+            scrollCollapse: true,
+            "columns": [
+                { "width": "80%" },
+                { "width": "150" },
+            ]
+        });
+    } );
+
+  function deleteTag(obj){
+        swal({
+            title: "Está seguro?",
+            text: "No se podrá recuperar el tag en un futuro",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Confirmar",
+            closeOnConfirm: false
+            },
+            function(){
+                $.ajax({
+                    url: 'tags/' + $(obj).data('id'),
+                    type: 'DELETE',
+                    success: function(result) {
+                        swal({
+                            title: "", 
+                            text: result.success, 
+                            type: "success"
+                        },function(){
+                            location.reload();
+                        });
+                    },
+                    error: function(data){
+                    swal("", data.responseJSON.error, "error")
+                }
+                });
+            });
+      
+  }
+</script>
+<% end %>

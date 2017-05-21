@@ -1,0 +1,214 @@
+
+
+<% content_for :head do %>
+
+<!-- Vendor CSS -->
+<link href="/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/sweetalert2/dist/sweetalert.css" rel="stylesheet">
+<link href="/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+<link href="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="/js/plugins/datepicker/css/datepicker.css" rel="stylesheet">
+
+<!-- CSS -->
+<link href="/css/app_1.min.css" rel="stylesheet">
+<link href="/css/app_2.min.css" rel="stylesheet">
+
+<style>
+    .datepicker td.active.active {
+    background-color: inherit !important;
+}
+</style>
+
+<% end %>
+<% if defined? session[:error_notice] != nil %>
+<input id="error_notice" type="text" name="error_notice" hidden="hidden" value="<%= session[:error_notice] %>">
+<%=session[:error_notice] = nil%>
+<% end %>
+<% if defined? session[:success_notice] != nil %>
+<input id="success_notice" type="text" name="success_notice" hidden="hidden" value="<%= session[:success_notice] %>">
+<%=session[:success_notice] = nil%>
+<% end %>
+
+<%= render partial: 'layouts/console/header' %>
+
+<section id="main">
+
+    <%= render partial: 'layouts/console/sideBar' %>
+
+    <section id="content">
+        <div class="container">
+            <div class="block-header">
+                <h2>CITAS</h2>
+            </div>
+
+            <div class="card" id="pickupLocation">
+
+                <form class="form-horizontal" role="form" method="POST" action="/appointments/<%= @appointment.id %>">
+                    <input type="hidden" name="_method" value="put" />
+                    <div class="card-header">
+                        <h2>Modificar la cita
+                        </h2>
+                    </div>
+
+                    <div class="card-body card-padding" style="padding-bottom: 0px;">
+                        <div class="form-group">
+                            <label for="getName" class="col-sm-2 control-label">Nombre:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                    <input type="text" class="form-control input-sm" id="getName"
+                                            placeholder="Nombre" name="user[name]"  value="<%= @appointment.user.name %>" readonly>
+                                </div>
+                            </div>
+                            <label for="getLastName" class="col-sm-1 control-label">Apellido:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                    <input type="text" class="form-control input-sm" id="getLastName"
+                                            placeholder="Apellido" name="user[lastname]"  value="<%= @appointment.user.lastname %>" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="getEmail" class="col-sm-2 control-label">Correo:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                    <input type="text" class="form-control input-sm" id="getEmail"
+                                            placeholder="Correo electrónico" name="user[email]"  value="<%= @appointment.user.email %>" readonly>
+                                </div>
+                            </div>
+                            <label for="getPhone" class="col-sm-1 control-label">Teléfono:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                    <input type="text" class="form-control input-sm" id="getPhone"
+                                            placeholder="Teléfono" name="user[phone]"  value="<%= @appointment.user.phone %>" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="getCity" class="col-sm-2 control-label">Sede:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                    <!--<input type="text" class="form-control input-sm" id="getLab"
+                                            placeholder="Sede" value="<%= @appointment.date %>" readonly>-->
+                                    <%= select("appointment", "lab_id", Lab.all.collect {|l| [l.city, l.id]}, {include_blank: false}, {:class => "selectpicker edit_lab"}) %>
+                                </div>
+                            </div>
+                            <label for="getCity" class="col-sm-1 control-label">Fecha:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                    <!--<input type="text" class="form-control input-sm" id="getLab"
+                                            placeholder="Sede" value="<%= @appointment.date %>">-->
+                                    <input type="text" class="form-control input-sm" id="date" name="appointment[date]" value="<%= @appointment.date.strftime('%m/%d/%Y') %>" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="hourField">
+                            <label for="getCity" class="col-sm-2 control-label">Hora:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                    <!--<input type="text" class="form-control input-sm" id="getLab"
+                                            placeholder="Sede" value="<%= @appointment.date %>">-->
+                                    <!--<input type="text" class="form-control input-sm" id="date" name="appointment[date]" value="<%= @appointment.date %>" required>-->
+                                    <select class="selectpicker edit_lab" id="hour" name="appointment[hour]">
+                                        <option value="<%= @appointment.date.strftime('%I:%M %p') %>" selected><%= @appointment.date.strftime('%I:%M %p') %></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-3 text-center">
+                                <button type="submit" id="submitEdit" class="btn btn-success btn-sm">Modificar cita</button>
+                            </div>
+                            <div class="col-sm-3 text-center">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="location.href = '/appointments/confirmed';">Cancelar</button>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</section>
+
+<%= render partial: 'layouts/console/footer' %>
+<% content_for :bottom do %>
+<!-- Javascript Libraries -->
+<script src="/vendors/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<script src="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/vendors/bower_components/Waves/dist/waves.min.js"></script>
+<script src="/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+<script src="/vendors/bower_components/sweetalert2/dist/sweetalert.min.js"></script>
+<script src="/vendors/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script src="/js/plugins/datepicker/js/bootstrap-datepicker.js"></script>
+
+
+
+<!-- Placeholder for IE9 -->
+<!--[if IE 9 ]>
+    <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+<![endif]-->
+
+<script src="/js/app.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#data-table-basic').DataTable();
+        // setPickUpCenter(document.getElementById("latitude").value
+        // , document.getElementById("longitude").value);
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        $('#date').datepicker({
+            daysOfWeekDisabled: [0,6],
+            minDate: today
+        })
+        .on('changeDate', getLabSchedule);
+
+        $('#appointment_lab_id').val(<%= @appointment.lab.id %>).change();
+        getLabSchedule();
+        $('#appointment_lab_id').val(<%= @appointment.lab.id %>).change();
+
+        if($('#error_notice').val()){
+            swal({ html:true, title:'Error!', text:$('#error_notice').val(), type: "error"});
+        }
+        if($('#success_notice').val()){
+            swal({ html:true, title:'', text:$('#success_notice').val(), type: "success"});
+        }
+    } );
+
+    function getLabSchedule(ev){
+        lab = <%= @appointment.lab.id %>;
+        value = $('#date').val();
+        $.ajax({
+            url: '/labs/' + lab + '/availability',
+            type: 'GET',
+            data:{
+                'appointment_date': value
+            },
+            success: function(result) {
+                var available_hours;
+                available_hours = result.available_hours.replace(/"/g, "");
+                available_hours = available_hours.split(",");
+                var html = '';
+                for(index = 1; index < available_hours.length - 1; ++index){
+                    html += '<option value="' + available_hours[index] + '">'+  available_hours[index] +'</option>'
+                };
+                $('#hourField').removeClass('hidden');
+                $('#hour').append(html);
+                $('#hour').selectpicker('refresh');
+                $('#submitEdit').prop('disabled', false);
+            },
+            error: function(data){
+            swal("", data.responseJSON.message, "error")
+            $('#hourField').addClass('hidden');
+            $('#submitEdit').prop('disabled', true);
+        }
+        });
+        // swal("El estado ha sido cambiado!", "El estado de la recogida ha cambiado a: " + text);
+    }
+</script>
+<% end %>

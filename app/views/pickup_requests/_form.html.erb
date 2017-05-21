@@ -1,0 +1,17 @@
+<%= form_for(pickup_request) do |f| %>
+  <% if pickup_request.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(pickup_request.errors.count, "error") %> prohibited this pickup_request from being saved:</h2>
+
+      <ul>
+      <% pickup_request.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,150 @@
+<aside id="sidebar" class="sidebar c-overflow">
+  <div class="s-profile">
+    <a href="" data-ma-action="profile-menu-toggle">
+      <div class="sp-pic">
+        <% if current_admin.photo.url %>
+            <img src="<%= current_admin.photo.url %>" alt="">
+        <% else %>
+            <img src="/images/default-user-icon-profile.png" alt="">
+        <% end %>
+
+      </div>
+
+      <div class="sp-info">
+        <%= current_admin.name %>
+        <i class="zmdi zmdi-caret-down"></i>
+      </div>
+    </a>
+
+    <ul class="main-menu">
+      <li>
+        <%= link_to destroy_user_session_path, :title => "Some link", :method => :delete do %>
+            <i class="zmdi zmdi-time-restore"></i> Salir
+        <% end %>
+
+      </li>
+    </ul>
+  </div>
+
+  <ul class="main-menu">
+    <% if (current_admin.get_processed_permissions & [Admin::MASTER]).any? %>
+        <li><a href="/admins"><i class="zmdi zmdi-account-o"></i> Administradores</a></li>
+    <% end %>
+    <% if (current_admin.get_processed_permissions & [Admin::MASTER, Admin::RESULTS]).any? %>
+        <li><a href="/users"><i class="zmdi zmdi-account"></i> Usuarios</a></li>
+    <% end %>
+
+    <% if (current_admin.get_processed_permissions & [Admin::MASTER]).any? %>
+        <li>
+          <a href="/labs"><i class="zmdi zmdi-city-alt"></i> Sedes</a>
+        </li>
+    <% end %>
+    <% if (current_admin.get_processed_permissions & [Admin::MASTER, Admin::RESULTS]).any? %>
+        <li>
+          <a href="/results">
+            <i class="zmdi zmdi-account-box-mail"></i>Resultados</a>
+        </li>
+    <% end %>
+    <% if (current_admin.get_processed_permissions & [Admin::MASTER, Admin::PICKUP_REQUESTS]).any? %>
+        <li>
+          <a href="/pickup_requests">
+            <i class="zmdi zmdi-case-check"></i>Recogida de muestras</a>
+        </li>
+    <% end %>
+    <% if (current_admin.get_processed_permissions & [Admin::MASTER, Admin::APPOINTMENTS]).any? %>
+      <li class="sub-menu">
+          <a href="" data-ma-action="submenu-toggle"><i class="zmdi zmdi-assignment"></i> Citas</a>
+          <ul>
+              <li><a href="/appointments/confirmed">Solicitadas</a></li>
+              <li><a href="/appointments/canceled">Canceladas</a></li>
+              <li><a href="/appointments/completed">Completadas</a></li>
+          </ul>
+      </li>
+    <% end %>
+      <li class="sub-menu">
+          <a href="/" data-ma-action="submenu-toggle"><i class="zmdi zmdi-file-plus"></i> Noticias</a>
+          <ul>
+              <li><a href="/news/index">Lista</a></li>
+              <li><a href="/categories/index">Categorias</a></li>
+              <li><a href="/tags/index">Tags</a></li>
+          </ul>
+      </li>
+  </ul>
+</aside>
+
+<aside id="chat" class="sidebar">
+
+  <div class="chat-search">
+    <div class="fg-line">
+      <input type="text" class="form-control" placeholder="Search People">
+      <i class="zmdi zmdi-search"></i>
+    </div>
+  </div>
+
+  <div class="lg-body c-overflow">
+    <div class="list-group">
+      <a class="list-group-item media" href="">
+        <div class="pull-left p-relative">
+          <img class="lgi-img" src="/img/demo/profile-pics/2.jpg" alt="">
+          <i class="chat-status-busy"></i>
+        </div>
+        <div class="media-body">
+          <div class="lgi-heading">Jonathan Morris</div>
+          <small class="lgi-text">Available</small>
+        </div>
+      </a>
+
+      <a class="list-group-item media" href="">
+        <div class="pull-left">
+          <img class="lgi-img" src="/img/demo/profile-pics/1.jpg" alt="">
+        </div>
+        <div class="media-body">
+          <div class="lgi-heading">David Belle</div>
+          <small class="lgi-text">Last seen 3 hours ago</small>
+        </div>
+      </a>
+
+      <a class="list-group-item media" href="">
+        <div class="pull-left p-relative">
+          <img class="lgi-img" src="/img/demo/profile-pics/3.jpg" alt="">
+          <i class="chat-status-online"></i>
+        </div>
+        <div class="media-body">
+          <div class="lgi-heading">Fredric Mitchell Jr.</div>
+          <small class="lgi-text">Availble</small>
+        </div>
+      </a>
+
+      <a class="list-group-item media" href="">
+        <div class="pull-left p-relative">
+          <img class="lgi-img" src="/img/demo/profile-pics/4.jpg" alt="">
+          <i class="chat-status-online"></i>
+        </div>
+        <div class="media-body">
+          <div class="lgi-heading">Glenn Jecobs</div>
+          <small class="lgi-text">Availble</small>
+        </div>
+      </a>
+
+      <a class="list-group-item media" href="">
+        <div class="pull-left">
+          <img class="lgi-img" src="/img/demo/profile-pics/5.jpg" alt="">
+        </div>
+        <div class="media-body">
+          <div class="lgi-heading">Bill Phillips</div>
+          <small class="lgi-text">Last seen 3 days ago</small>
+        </div>
+      </a>
+
+      <a class="list-group-item media" href="">
+        <div class="pull-left">
+          <img class="lgi-img" src="/img/demo/profile-pics/6.jpg" alt="">
+        </div>
+        <div class="media-body">
+          <div class="lgi-heading">Wendy Mitchell</div>
+          <small class="lgi-text">Last seen 2 minutes ago</small>
+        </div>
+      </a>
+    </div>
+  </div>
+</aside>

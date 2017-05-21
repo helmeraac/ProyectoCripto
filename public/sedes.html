@@ -1,0 +1,178 @@
+
+<!-- Vendor CSS -->
+<link href="vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+<link href="vendors/bower_components/sweetalert2/dist/sweetalert.css" rel="stylesheet">
+<link href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+<link href="vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+<link href="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+<link href="vendors/bower_components/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<!-- CSS -->
+<link href="css/app_1.min.css" rel="stylesheet">
+<link href="css/app_2.min.css" rel="stylesheet">
+
+<% end %>
+
+<%= render partial: 'layouts/console/header' %>
+
+<section id="main">
+
+    <%= render partial: 'layouts/console/sideBar' %>
+
+    <section id="content">
+        <div class="container">
+            <div class="block-header">
+                <h2>RESULTADOS</h2>
+            </div>
+
+            <div class="card" id="form-user" style="display: none">
+
+                <form class="form-horizontal" role="form">
+                    <div class="card-header">
+                        <h2>Nueva sede
+                        </h2>
+                    </div>
+
+                    <div class="card-body card-padding" style="padding-bottom: 0px;">
+                        <div class="form-group">
+                            <label for="inputCity" class="col-sm-2 control-label">Ciudad:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                    <input type="text" class="form-control input-sm" id="inputCity"
+                                            placeholder="Ciudad" disabled>
+                                </div>
+                            </div>
+                            <label for="inputAddress" class="col-sm-1 control-label">Dirección:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                    <input type="text" class="form-control input-sm" id="inputAddress"
+                                            placeholder="Dirección" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDocument" class="col-sm-2 control-label">Horario de atención:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                    <input type="number" class="form-control input-sm" id="inputDocument"
+                                            placeholder="Documento" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-1 col-sm-9 text-center">
+                                <button type="submit" class="btn bgm-green waves-effect">AÑADIR SEDE</button>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Lista de sedes
+                    </h2>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="data-table-basic" class="table table-striped display">
+                        <thead>
+                        <tr>
+                          <!-- TODO: Campos para mostrar en la tabla de todas las sedes -->
+                            <th>Ciudad</th>
+                            <th>Dirección</th>
+                            <th>Horario de atención</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Ciudad</th>
+                            <th>Dirección</th>
+                            <th>Horario de atención</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        <tr>
+                            <td>Bogotá</td>
+                            <td>Carrera 123123</td>
+                            <td></td>
+                            <td>
+                                <button class="btn btn-primary btn-icon waves-effect waves-circle waves-float" onclick="modifyUser()">
+                                    <i class="zmdi zmdi-edit"></i>
+                                </button>
+                                <%= button_tag(type: 'button', class: "btn btn-danger btn-icon waves-effect waves-circle waves-float", onclick: "deleteAdmin(this)", data: { } )do %>
+                                            <i class="zmdi zmdi-delete"></i>
+                                        <% end %>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</section>
+
+<%= render partial: 'layouts/console/footer' %>
+
+<% content_for :bottom do %>
+<!-- Javascript Libraries -->
+<script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<script src="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
+<script src="vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+<script src="vendors/bower_components/sweetalert2/dist/sweetalert.min.js"></script>
+<script src="vendors/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script src="vendors/fileinput/fileinput.min.js"></script>
+
+
+<!-- Placeholder for IE9 -->
+<!--[if IE 9 ]>
+    <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+<![endif]-->
+
+<script src="js/app.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#data-table-basic').DataTable();
+    } );
+
+    //Warning Message
+    $('#sa-warning').click(function(){
+        swal({
+          title: "Está seguro?",
+          text: "No se podran recuperar lo datos del usuario en un futuro",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Confirmar",
+          closeOnConfirm: false
+        },
+        function(){
+          swal("Elminado!", "El usuario ha sido eliminado", "success");
+        });
+    });
+</script>
+<script type="text/javascript">
+    function modifyUser(){
+        $('#form-user').show('slow');
+        window.location.hash = '#form-user';
+    }
+
+    function cancelEdit(){
+        $('#form-user').hide('slow');
+    }
+
+    $(document).ready(function() {
+        $('table.display').DataTable();
+    } );
+</script>
+<% end %>

@@ -1,0 +1,246 @@
+
+<% content_for :head do %>
+
+<!-- Vendor CSS -->
+<link href="/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/sweetalert2/dist/sweetalert.css" rel="stylesheet">
+<link href="/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+<link href="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<!-- CSS -->
+<link href="/css/app_1.min.css" rel="stylesheet">
+<link href="/css/app_2.min.css" rel="stylesheet">
+
+<% end %>
+<% if defined? session[:error_notice] != nil %>
+<input id="error_notice" type="text" name="error_notice" hidden="hidden" value="<%= session[:error_notice] %>">
+<%=session[:error_notice] = nil%>
+<% end %>
+<% if defined? session[:success_notice] != nil %>
+<input id="success_notice" type="text" name="success_notice" hidden="hidden" value="<%= session[:success_notice] %>">
+<%=session[:success_notice] = nil%>
+<% end %>
+<%= render partial: 'layouts/console/header' %>
+
+<section id="main">
+
+    <%= render partial: 'layouts/console/sideBar' %>
+
+    <section id="content">
+        <div class="container">
+            <div class="block-header">
+                <h2>RESULTADOS</h2>
+            </div>
+            <div class="card" id="form-user">
+
+                <form class="form-horizontal" role="form" method="POST" action="<%=results_path%>" enctype="multipart/form-data">
+                    <div class="card-header">
+                        <h2>Resultados del paciente
+                        </h2>
+                    </div>
+                    <input type="hidden" name="result[user_id]" value="<%=Base64.encode64(@user.id.to_s)%>">
+                    <div class="card-body card-padding" style="padding-bottom: 0px;">
+                     <div class="form-group">
+                            <label for="inputName" class="col-sm-offset-1 col-sm-2 control-label">Tipo:</label>
+                            <div class="col-sm-6">
+                                <div class="fg-line">
+                                    <input type="text" class="form-control input-sm" id="inputType"
+                                            placeholder="Tipo" value="<%=@user.type_string%>" disabled>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <div class="form-group">
+                            <label for="inputName" class="col-sm-offset-1 col-sm-2 control-label">Nombre:</label>
+                            <div class="col-sm-6">
+                                <div class="fg-line">
+                                    <input type="text" class="form-control input-sm" id="inputName"
+                                            placeholder="Nombre" value="<%=@user.complete_name%>" disabled>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDocument" class="col-sm-offset-1 col-sm-2 control-label">Ciudad:</label>
+                            <div class="col-sm-6">
+                                <div class="fg-line">
+                                    <input type="text" class="form-control input-sm" id="inputCity"
+                                            placeholder="Ciudad" value="<%=@user.city%>" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDocument" class="col-sm-offset-1 col-sm-2 control-label">Documento / NIT:</label>
+                            <div class="col-sm-6">
+                                <div class="fg-line">
+                                    <input type="number" class="form-control input-sm" id="inputDocument"
+                                            placeholder="Documento"  value="<%=@user.doc%>" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDocument" class="col-sm-offset-1 col-sm-2 control-label">Correo:</label>
+                            <div class="col-sm-6">
+                                <div class="fg-line">
+                                    <input type="email" class="form-control input-sm" id="inputMail"
+                                            placeholder="Correo" value="<%=@user.email%>" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-header">
+                            <h2>Nuevo resultado</h2>
+                        </div>
+                        <div class="form-group">
+                            <label for="sede" class="col-sm-offset-1 col-sm-2 control-label">Sede:</label>
+                            <div class="col-sm-5">
+                                <div class="fg-line">
+                                     <%=select("result", "lab_id", Lab.all.collect {|l| [ l.city, l.id ]}, { include_blank: true},{:id=> "inputLocation",:class => "selectpicker", :required => true}) %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fileName" class="col-sm-offset-2 col-sm-1 control-label">Nombre:</label>
+                            <div class="col-sm-5">
+                                <div class="fg-line">
+                                    <input type="text" class="form-control input-sm" id="fileName"
+                                            placeholder="" name="result[name]" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                    <span class="btn btn-primary btn-file m-r-10">
+                                        <span class="fileinput-new" style="cursor: pointer;">Seleccionar Archivo</span>
+                                        <input type="file" name="result[file_path]" required>
+                                    </span>
+                                    <span class="fileinput-filename"></span>
+                                    <a href="#" class="close fileinput-exists" data-dismiss="fileinput">&times;</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-1 col-sm-9 text-center">
+                                <button type="submit" class="btn bgm-green waves-effect">AÑADIR RESULTADO</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table id="data-table-basic" class="table table-striped display">
+                        <thead>
+                        <tr>
+                            <!-- TODO: Campos para mostrar en la tabla del usuario respectivo -->
+                            <th>Fecha</th>
+                            <th>Sede</th>
+                            <th>Nombre</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                    
+                        <tbody>
+                         <% @user_results.each do |result| %>
+                                <tr>
+                                    <td><%= result.upload_date.strftime("%d/%m/%Y a las %I:%M %p") %></td>
+                                    <td><%= result.lab.city %></td>
+                                    <td><%= result.name %></td>
+                                     <td>
+                                    <a class="btn btn-primary btn-icon waves-effect waves-circle waves-float" href="<%=download_result_path(result.id)%>" download target="_blank">
+                                        <i class="zmdi zmdi-download"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-icon waves-effect waves-circle waves-float" id="sa-warning" onclick="deleteResult(<%=result.id%>)">
+                                        <i class="zmdi zmdi-delete"></i>
+                                    </button>
+                                </td>
+                                </tr>
+                                <% end %>        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<%= render partial: 'layouts/console/footer' %>
+
+<% content_for :bottom do %>
+<!-- Javascript Libraries -->
+<script src="/vendors/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<script src="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/vendors/bower_components/Waves/dist/waves.min.js"></script>
+<script src="/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+<script src="/vendors/bower_components/sweetalert2/dist/sweetalert.min.js"></script>
+<script src="/vendors/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script src="/vendors/fileinput/fileinput.min.js"></script>
+
+
+<!-- Placeholder for IE9 -->
+<!--[if IE 9 ]>
+    <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+<![endif]-->
+
+<script src="/js/app.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        if($('#error_notice').val()){
+            swal({ html:true, title:'Error!', text:$('#error_notice').val(), type: "error"});
+        }
+        if($('#success_notice').val()){
+            swal("", $('#success_notice').val(), "success");
+        }  
+        $('#data-table-basic').DataTable({
+"order": [[ 0, "desc" ]]
+
+        });
+    } );
+
+    //Warning Message
+
+    function deleteResult(id){
+            swal({
+                     title: "Está seguro?",
+          text: "No se podran recuperar los datos del resultado en un futuro",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Confirmar",
+          closeOnConfirm: false
+        },
+                     function(){
+                        $.ajax({
+                            url: '/results/' + id,
+                            type: 'DELETE',
+                            success: function(result) {
+                                swal({
+                                    title: "", 
+                                    text: result.success, 
+                                    type: "success"
+                                },function(){
+                                    location.reload();
+                                });
+                            },
+                            error: function(data){
+                            swal("", data.responseJSON.message, "error")
+                        }
+                        });
+                    });
+    
+    }
+</script>
+<script type="text/javascript">
+
+
+    function cancelEdit(){
+        $('#form-user').hide('slow');
+    }
+
+
+
+</script>
+<% end %>

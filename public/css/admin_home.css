@@ -1,0 +1,14 @@
+.welcome-container{
+    text-align: center;
+    padding: 50px;
+}
+
+.welcome-text{
+    color: #3e4c7d !important;
+}
+
+.image-welcome{
+    width: 500px;
+    max-width: 100%;
+    margin-bottom: 50px;
+}

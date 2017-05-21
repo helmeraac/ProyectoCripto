@@ -1,0 +1,154 @@
+
+<% content_for :head do %>
+<!-- Vendor CSS -->
+<link href="/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/sweetalert2/dist/sweetalert.css" rel="stylesheet">
+<link href="/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+<link href="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="/vendors/weekline/jquery.weekLine-white.css " rel="stylesheet" />
+
+
+<!-- CSS -->
+<link href="/css/app_1.min.css" rel="stylesheet">
+<link href="/css/app_2.min.css" rel="stylesheet">
+
+<% end %>
+
+<%= render partial: 'layouts/console/header' %>
+
+<section id="main">
+
+    <%= render partial: 'layouts/console/sideBar' %>
+
+    <section id="content">
+        <div class="container">
+            <div class="block-header">
+                <h2>SEDES</h2>
+            </div>
+
+            <div class="card" id="form-user">
+                <!--TODO: Metodo del form y name de los campos-->
+                <form class="form-horizontal" role="form">
+                    <div class="card-header">
+                        <h2>Nueva sede
+                        </h2>
+                    </div>
+
+                    <div class="card-body card-padding" style="padding-bottom: 0px;">
+                        <div class="form-group">
+                            <label for="inputCity" class="col-sm-2 control-label">Ciudad:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                   <select class="selectpicker" id="inputCity" name="">
+
+                                    </select>
+                                </div>
+                            </div>
+                            <label for="inputAddress" class="col-sm-1 control-label">Dirección:</label>
+                            <div class="col-sm-4">
+                                <div class="fg-line">
+                                    <input type="text" class="form-control input-sm" id="inputAddress"
+                                            placeholder="Dirección">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDocument" class="col-sm-2 control-label">Horarios de atención:</label>
+                            <div id="hourPicker">
+                                <div class="col-sm-4">
+                                    <div class="fg-line">
+                                        <input type='text' class="form-control time-picker"
+                                            placeholder="Fecha de inicio...">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="fg-line">
+                                        <input type='text' class="form-control time-picker"
+                                            placeholder="Fecha de fin...">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <div class="fg-line">
+                                        <input type='text' class="form-control time-picker"
+                                            placeholder="Fecha de inicio...">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="fg-line">
+                                        <input type='text' class="form-control time-picker"
+                                            placeholder="Fecha de fin...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDocument" class="col-sm-2 control-label">Días de atención:</label>
+                            <div class="col-sm-5">
+                                <div class="fg-line">
+                                        <span id="weekCal" class="form-control"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-1 col-sm-9 text-center">
+                                <button type="submit" class="btn bgm-green waves-effect">AÑADIR SEDE</button>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</section>
+
+<%= render partial: 'layouts/console/footer' %>
+
+<% content_for :bottom do %>
+<!-- Javascript Libraries -->
+<script src="/vendors/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<script src="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/vendors/bower_components/Waves/dist/waves.min.js"></script>
+<script src="/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+<script src="/vendors/bower_components/sweetalert2/dist/sweetalert.min.js"></script>
+<script src="/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script src="/vendors/bower_components/moment/min/moment.min.js"></script>
+<script src="/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/vendors/weekline/jquery.weekLine.js"></script> 
+
+
+
+<!-- Placeholder for IE9 -->
+<!--[if IE 9 ]>
+    <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+<![endif]-->
+
+<script src="/js/app.min.js"></script>
+
+<script type="text/javascript">
+    var file = "/ciudades.txt";
+    var html = '';
+    $.get(file,function(txt){
+        var lines = txt.split("\n");
+        for (var i = 0, len = lines.length; i < len; i++) {
+            html += '<option value="' + lines[i] + '">' + lines[i] +'</option> \n';
+        }
+        $('#inputCity').append(html);
+    });
+    $(document).ready(function() {
+
+        $("#weekCal").weekLine({
+            onChange: function () {
+                // $("#selectedDays").html(
+                //     $(this).weekLine('getSelected', 'indexes')
+                // );
+                // TODO: Retorna los dias seleccionados
+            }
+        });
+    } );
+</script>
+<% end %>

@@ -1,0 +1,90 @@
+<% content_for :head do %>
+  <!-- Vendor CSS -->
+  <link href="/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+  <link href="/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+
+  <!-- CSS -->
+  <link href="/css/app_1.min.css" rel="stylesheet">
+  <link href="/css/app_2.min.css" rel="stylesheet">
+<% end %>
+  <div class="login-content">
+    <!-- Login -->
+    <div class="lc-block toggled" id="l-login">
+      <div class="lcb-form">
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <div class="input-group m-b-20">
+          <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+          <div class="fg-line">
+            <!-- <input type="text" class="form-control" placeholder="Username"> -->
+            <%= f.email_field :email, autofocus: true , class: 'form-control',placeholder:"Correo Electrónico" %>
+          </div>
+        </div>
+
+        <div class="input-group m-b-20">
+          <span class="input-group-addon"><i class="zmdi zmdi-male"></i></span>
+          <div class="fg-line">
+            <!-- <input type="password" class="form-control" placeholder="Password"> -->
+            <%= f.password_field :password, autocomplete: "off",class:"form-control",placeholder:"Contraseña" %>
+          </div>
+        </div>
+
+        <% if devise_mapping.rememberable? -%>
+        <div class="checkbox">
+          <label>
+            <%= f.check_box :remember_me %>
+            <i class="input-helper"></i>
+            Recúerdame
+
+          </label>
+        </div>
+        <% end -%>
+        <!-- <a href="" class="btn btn-login btn-success btn-float"><i class="zmdi zmdi-arrow-forward"></i></a>
+        <%= f.submit "Log in" %> -->
+        <%= button_tag(type: 'submit', class: "btn btn-login btn-success btn-float") do %>
+        <i class="zmdi zmdi-arrow-forward"></i>
+        <% end %>
+        <% end %>
+      </div>
+
+      <div class="lcb-navigation">
+        <a href="" data-ma-action="login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Olvidé mi contraseña</span></a>
+      </div>
+    </div>
+
+
+
+
+    <!-- Forgot Password -->
+    <div class="lc-block" id="l-forget-password">
+      <div class="lcb-form">
+        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+        <p class="text-left">Ingresa el correo electrónico con el que te encuentras registrado y te enviaremos un link para reestablecer la contraseña</p>
+
+        <div class="input-group m-b-20">
+          <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+          <div class="fg-line">
+            <!-- <input type="text" class="form-control" placeholder="Email Address"> -->
+            <%= f.email_field :email, autofocus: true,class:"form-control",placeholder:"Correo electrónico" %>
+          </div>
+        </div>
+
+        <!-- <a href="" class="btn btn-login btn-success btn-float"><i class="zmdi zmdi-check"></i></a> -->
+        <%= button_tag(type: 'submit', class: "btn btn-login btn-success btn-float") do %>
+        <i class="zmdi zmdi-check"></i>
+        <% end %>
+        <% end %>
+      </div>
+
+      <div class="lcb-navigation">
+        <a href="" data-ma-action="login-switch" data-ma-block="#l-login"><i class="zmdi zmdi-long-arrow-right"></i> <span>Ingresar</span></a>
+      </div>
+    </div>
+  </div>
+<% content_for :bottom do %>
+  <!-- Javascript Libraries -->
+  <script src="/vendors/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+  <script src="/vendors/bower_components/Waves/dist/waves.min.js"></script>
+  <script src="/js/app.min.js"></script>
+<% end %>

@@ -1,0 +1,632 @@
+<% content_for :head do %>
+    <!-- Vendor CSS -->
+    <link href="vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+    <link href="vendors/bower_components/sweetalert2/dist/sweetalert.css" rel="stylesheet">
+    <link href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+    <link href="vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+    <link href="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+    <link href="vendors/bower_components/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+
+
+    <!-- CSS -->
+    <link href="css/app_1.min.css" rel="stylesheet">
+    <link href="css/app_2.min.css" rel="stylesheet">
+<% end %>
+
+<%= render partial: 'layouts/console/header' %>
+
+<section id="main">
+
+  <%= render partial: 'layouts/console/sideBar' %>
+
+  <section id="content">
+    <div class="container">
+      <div class="block-header">
+        <h2>ADMINISTRADORES</h2>
+      </div>
+
+      <div class="card" id="form-user" style="display: none">
+
+        <form class="form-horizontal" role="form" id="modifyForm" action="">
+
+          <div class="card-header">
+            <h2>Editar Admnistrador
+              <small>Modifique los datos del administrador</small>
+            </h2>
+          </div>
+
+          <div class="card-body card-padding">
+            <div class="form-group">
+              <label for="inputName" class="col-sm-offset-1 col-sm-2 control-label">Nombre:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="text" class="form-control input-sm" id="inputName"
+                         placeholder="Nombre" name="admin[name]" value="a" required>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPhoto" class="col-sm-offset-1 col-sm-2 control-label">Imagen de perfil:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <div class="fileinput fileinput-new" data-provides="fileinput" id="inputPhoto">
+                    <div class="fileinput-preview thumbnail edit" data-trigger="fileinput"></div>
+                    <div>
+                                                      <span class="btn btn-info btn-file">
+                                                          <span class="fileinput-new">Selecccionar imagen</span>
+                                                          <input type="file" name="admin[photo]">
+                                                          <input id="deletePhoto" type="hidden" name="delete_photo" value="false">
+                                                      </span>
+                      <a href="#" class="btn btn-danger fileinput-exists"
+                         data-dismiss="fileinput" onclick="deletePhoto()">Eliminar</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputLocation" class="col-sm-offset-1 col-sm-2 control-label">Sede:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <%= select("admin", "lab_id", Lab.all.collect {|l| [l.city, l.id]}, {include_blank: false}, {:class => "selectpicker edit_lab"}) %>
+                  <%#<select class="selectpicker" id="inputLocation">
+                                                  <option>Bogotá</option>
+                                                  <option>Villavicencio</option>
+                                                  <option>Yopal</option>
+                                                  <option>Cúcuta</option>
+                                              </select>%>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail" class="col-sm-offset-1 col-sm-2 control-label">Correo electrónico:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="email" class="form-control input-sm" id="inputEmail"
+                         placeholder="Correo" name="admin[email]" required>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputBio" class="col-sm-offset-1 col-sm-2 control-label">Descripción:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                                              <textarea type="text" class="form-control input-sm" rows="5" id="inputBio"
+                                                        placeholder="Descripción" name="admin[bio]"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputBio" class="col-sm-offset-1 col-sm-2 control-label">Permisos:</label>
+              <div class="col-sm-9">
+                <div class="fg-line">
+                  <div class="toggle-switch toggle-switch-demo" style="margin-top: 10px;" data-ts-color="red">
+                    <label for="permissions-e-0" class="ts-label" style="width: 45px;">Master</label>
+                    <input id="permissions-e-0" type="checkbox" hidden="hidden">
+                    <label for="permissions-e-0" class="ts-helper"></label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-offset-3 col-sm-10">
+                <div class="fg-line">
+                  <div class="toggle-switch toggle-switch-demo" style="margin-top: 10px;">
+                    <label for="permissions-e-1" class="ts-label" style="width: 45px;">Noticias</label>
+                    <input id="permissions-e-1" type="checkbox" hidden="hidden">
+                    <label for="permissions-e-1" class="ts-helper"></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-offset-3 col-sm-10">
+                <div class="fg-line">
+                  <div class="toggle-switch toggle-switch-demo" style="margin-top: 10px;">
+                    <label for="permissions-e-2" class="ts-label">Resultados</label>
+                    <input id="permissions-e-2" type="checkbox" hidden="hidden">
+                    <label for="permissions-e-2" class="ts-helper"></label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-offset-3 col-sm-10">
+                <div class="fg-line">
+                  <div class="toggle-switch toggle-switch-demo" style="margin-top: 10px;">
+                    <label for="permissions-e-3" class="ts-label">Solicitudes de recogida</label>
+                    <input id="permissions-e-3" type="checkbox" hidden="hidden">
+                    <label for="permissions-e-3" class="ts-helper"></label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-offset-3 col-sm-10">
+                <div class="fg-line">
+                  <div class="toggle-switch toggle-switch-demo" style="margin-top: 10px;">
+                    <label for="permissions-e-4" class="ts-label" style="width: 45px;">Citas</label>
+                    <input id="permissions-e-4" type="checkbox" hidden="hidden">
+                    <label for="permissions-e-4" class="ts-helper"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-3 text-center">
+                <button type="submit" class="btn btn-success btn-sm">Editar administrador</button>
+              </div>
+              <div class="col-sm-3 text-center">
+                <button type="button" class="btn btn-danger btn-sm" onclick="cancelEdit()">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="card" id="formNewUser" style="display: none">
+
+
+        <form class="form-horizontal" role="form" id="newForm" action="" method="post" enctype="multipart/form-data">
+          <div class="card-header">
+            <h2>Crear Administrador
+              <small>Ingrese los datos del nuevo administrador</small>
+            </h2>
+          </div>
+
+          <div class="card-body card-padding">
+            <div class="form-group">
+              <label for="inputName" class="col-sm-offset-1 col-sm-2 control-label">Nombre:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="text" class="form-control input-sm" id="inputName"
+                         placeholder="Nombre" name="admin[name]" required>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPhoto" class="col-sm-offset-1 col-sm-2 control-label">Imagen de perfil:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <div class="fileinput fileinput-new" data-provides="fileinput" id="inputPhoto">
+                    <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
+                    <div>
+                                                      <span class="btn btn-info btn-file">
+                                                          <span class="fileinput-new">Selecccionar imagen</span>
+                                                          <input type="file" name="admin[photo]">
+                                                      </span>
+                      <a href="#" class="btn btn-danger fileinput-exists"
+                         data-dismiss="fileinput">Eliminar</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputLocation" class="col-sm-offset-1 col-sm-2 control-label">Sede:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+
+
+                  <%= select("admin", "lab_id", Lab.all.collect {|l| [l.city, l.id]}, {include_blank: false}, {:id => "inputLocation", :class => "selectpicker"}) %>
+
+
+                  <%#<select class="selectpicker" id="inputLocation">
+                                                  <option>Bogotá</option>
+                                                  <option>Villavicencio</option>
+                                                  <option>Yopal</option>
+                                                  <option>Cúcuta</option>
+                                              </select>%>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail" class="col-sm-offset-1 col-sm-2 control-label">Correo electrónico:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="email" class="form-control input-sm" id="inputEmail"
+                         placeholder="Correo" name="admin[email]" required>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputBio" class="col-sm-offset-1 col-sm-2 control-label">Descripción:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                                              <textarea type="text" class="form-control input-sm" rows="5" id="inputBio"
+                                                        placeholder="Descripción" name="admin[bio]"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputBio" class="col-sm-offset-1 col-sm-2 control-label">Permisos:</label>
+              <div class="col-sm-9">
+                <div class="fg-line">
+                  <div class="toggle-switch toggle-switch-demo" style="margin-top: 10px;" data-ts-color="red">
+                    <label for="permissions0" class="ts-label" style="width: 45px;">Master</label>
+                    <input id="permissions0" type="checkbox" hidden="hidden">
+                    <label for="permissions0" class="ts-helper"></label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-offset-3 col-sm-10">
+                <div class="fg-line">
+                  <div class="toggle-switch toggle-switch-demo" style="margin-top: 10px;">
+                    <label for="permissions1" class="ts-label" style="width: 45px;">Noticias</label>
+                    <input id="permissions1" type="checkbox" hidden="hidden">
+                    <label for="permissions1" class="ts-helper"></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-offset-3 col-sm-10">
+                <div class="fg-line">
+                  <div class="toggle-switch toggle-switch-demo" style="margin-top: 10px;">
+                    <label for="permissions2" class="ts-label">Resultados</label>
+                    <input id="permissions2" type="checkbox" hidden="hidden">
+                    <label for="permissions2" class="ts-helper"></label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-offset-3 col-sm-10">
+                <div class="fg-line">
+                  <div class="toggle-switch toggle-switch-demo" style="margin-top: 10px;">
+                    <label for="permissions3" class="ts-label">Solicitudes de recogida</label>
+                    <input id="permissions3" type="checkbox" hidden="hidden">
+                    <label for="permissions3" class="ts-helper"></label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-offset-3 col-sm-10">
+                <div class="fg-line">
+                  <div class="toggle-switch toggle-switch-demo" style="margin-top: 10px;">
+                    <label for="permissions4" class="ts-label" style="width: 45px;">Citas</label>
+                    <input id="permissions4" type="checkbox" hidden="hidden">
+                    <label for="permissions4" class="ts-helper"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-3 text-center">
+                <button type="submit" class="btn btn-success btn-sm">Crear administrador</button>
+              </div>
+              <div class="col-sm-3 text-center">
+                <button type="button" class="btn btn-danger btn-sm" onclick="cancelCreate()">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 style="display: inline-block;">Lista de administradores
+          </h2>
+          <button type="button" class="btn btn-success btn-sm pull-right" style="display: inline-block; width: 160px; height: 35px;" onclick="createAdmin()">Crear
+            administrador
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table id="data-table-basic" class="table table-striped">
+            <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Sede</th>
+              <th>Descripción</th>
+              <th>Acciones</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Sede</th>
+              <th>Descripción</th>
+              <th>Acciones</th>
+            </tr>
+            </tfoot>
+            <tbody>
+            <% @admins.each do |admin| %>
+                <tr>
+                  <td><%= admin.name %></td>
+                  <td><%= admin.email %></td>
+                  <td><%= admin.lab %></td> <!--Pendiente para variable de sede-->
+                  <td><%= admin.bio %></td>
+                  <td><%= button_tag(type: 'button', class: "btn btn-primary btn-icon waves-effect waves-circle waves-float", onclick: "modifyAdmin(this)", data: {id: admin.id, name: admin.name, email: admin.email, bio: admin.bio, permissions: admin.permissions, photo: admin.photo.url, lab: admin.lab.id}) do %>
+                        <i class="zmdi zmdi-edit"></i>
+                    <% end %>
+                    <%= button_tag(type: 'button', class: "btn btn-danger btn-icon waves-effect waves-circle waves-float", onclick: "deleteAdmin(this)", data: {id: admin.id}) do %>
+                        <i class="zmdi zmdi-delete"></i>
+                    <% end %>
+                    <%= button_tag(type: 'button', class: "btn btn-success btn-icon waves-effect waves-circle waves-float", onclick: "newPassword(this)", data: {id: admin.id}) do %>
+                        <i class="zmdi zmdi-refresh-sync-alert"></i>
+                    <% end %>
+                  </td>
+                  <!--<%= link_to 'Destroy', admin, method: :delete, data: {confirm: 'Are you sure?'} %>-->
+                  <!--<%= link_to('Logout', destroy_user_session_path, :method => :delete) %>  -->
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</section>
+
+<%= render partial: 'layouts/console/footer' %>
+
+<% content_for :bottom do %>
+    <!-- Javascript Libraries -->
+    <script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
+    <script src="vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+    <script src="vendors/bower_components/sweetalert2/dist/sweetalert.min.js"></script>
+    <script src="vendors/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+    <script src="vendors/fileinput/fileinput.min.js"></script>
+
+
+    <!-- Placeholder for IE9 -->
+    <!--[if IE 9 ]>
+    <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+    <![endif]-->
+
+    <script src="js/app.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#data-table-basic').DataTable({
+                scrollX: true,
+                scrollCollapse: true,
+                "columns": [
+                    {"width": "175"},
+                    null,
+                    {"width": "100"},
+                    {"width": "125"},
+                    {"width": "150"},
+                ]
+            });
+        });
+
+    </script>
+    <script type="text/javascript">
+        function modifyAdmin(obj) {
+            $('#inputName').val($(obj).data('name'));
+            $('#inputEmail').val($(obj).data('email'));
+            $('#inputBio').val($(obj).data('bio'));
+            $('.edit_lab').val($(obj).data('lab')).change();
+            $('.fileinput-preview.thumbnail.edit').html('');
+            if ($(obj).data('photo') != null) {
+                $('.fileinput-preview.thumbnail.edit').append("<img src='" + $(obj).data('photo') + "'/>");
+            }
+
+            process_permissions_to_edit($('#modifyForm'), $(obj).data('permissions'))
+
+            var action = 'admins/' + ($(obj).data('id'))
+            $('#modifyForm').attr('data-action', action);
+            if ($('#formNewUser').is(':visible')) {
+                $('#formNewUser').hide('slow');
+            }
+            $('#form-user').show('slow');
+            $(document).scrollTop($("#content").offset().top);
+        }
+
+        function cancelEdit() {
+            $('#form-user').hide('slow');
+        }
+    </script>
+
+    <script type="text/javascript">
+        function createAdmin() {
+            var action = 'admins'
+            $('#newForm').attr('action', action);
+            if ($('#form-user').is(':visible')) {
+                $('#form-user').hide('slow');
+            }
+            $('#formNewUser').show('slow');
+            window.location.hash = 'formNewUser';
+        }
+
+        function cancelCreate() {
+            $('#formNewUser').hide('slow');
+        }
+    </script>
+    <script>
+        $('#newForm').submit(function (e) {
+            var formData = new FormData($(this)[0]);
+
+            formData.append('admin[permissions]', process_permissions_to_send($(this)[0], 0));
+            $.ajax({
+                url: "admins/",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                type: "POST",
+
+                success: function (data) {
+                    swal({
+                        title: "",
+                        text: data.success,
+                        type: "success"
+                    }, function () {
+                        location.reload();
+                    });
+                },
+                error: function (data) {
+                    swal("", data.responseJSON.message, "error")
+                }
+            });
+            e.preventDefault();
+        });
+
+        $('#modifyForm').submit(function (e) {
+            var formData = new FormData($(this)[0]);
+            var formAction = $(this).attr('data-action');
+            formData.append('admin[permissions]', process_permissions_to_send($(this)[0], 1));
+            $.ajax({
+                url: formAction,
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                type: "PUT",
+
+                success: function (data) {
+                    swal({
+                        title: "",
+                        text: data.success,
+                        type: "success"
+                    }, function () {
+                        location.reload();
+                    });
+                },
+                error: function (data) {
+                    swal("", data.responseJSON.message, "error")
+                }
+            });
+            e.preventDefault();
+        });
+
+
+        function newPassword(obj) {
+            swal({
+                    title: "Está seguro?",
+                    text: "Se generará una nueva contraseña para el administrador y se eliminará el acceso con la contraseña anterior",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Confirmar",
+                    closeOnConfirm: false
+                },
+                function () {
+                    $.ajax({
+                        url: 'admins/' + $(obj).data('id') + "/regenerate_admin_password",
+                        type: 'POST',
+                        success: function (result) {
+                            swal({
+                                title: "",
+                                text: result.success,
+                                type: "success"
+                            }, function () {
+                                location.reload();
+                            });
+                        },
+                        error: function (data) {
+                            swal("", data.responseJSON.message, "error")
+                        }
+                    });
+                });
+        }
+
+        function deleteAdmin(obj) {
+            swal({
+                    title: "Está seguro?",
+                    text: "No se podran recuperar lo datos del administrador en un futuro",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Confirmar",
+                    closeOnConfirm: false
+                },
+                function () {
+                    $.ajax({
+                        url: 'admins/' + $(obj).data('id'),
+                        type: 'DELETE',
+                        success: function (result) {
+                            swal({
+                                title: "",
+                                text: result.success,
+                                type: "success"
+                            }, function () {
+                                location.reload();
+                            });
+                        },
+                        error: function (data) {
+                            swal("", data.responseJSON.error, "error")
+                        }
+                    });
+                });
+        }
+
+        function process_permissions_to_send(obj, action) {
+            permissions = "";
+            action == 0 ? base_selector = "input#permissions" : base_selector = "input#permissions-e-";
+            for (i = 0; i < 5; i++) {
+                var permissionSelector = base_selector + i;
+                var permissionValue = $(obj).find(permissionSelector)[0].checked ? 1 : 0;
+                permissions += permissionValue;
+            }
+            intPermissions = parseInt(permissions, 2);
+            return intPermissions;
+        }
+
+        function process_permissions_to_edit(obj, int) {
+            permissions = (int >>> 0).toString(2);
+            while (permissions.length != 5) {
+                permissions = "0" + permissions;
+            }
+
+            for (i = 0; i < 5; i++) {
+                var permissionSelector = "input#permissions-e-" + i;
+                $(obj).find(permissionSelector).prop('checked', parseInt(permissions[i]));
+
+            }
+        }
+
+        $('#permissions0').change(function () {
+            if (this.checked) {
+                $('#permissions1').prop('checked', true);
+                $('#permissions1').attr("disabled", true);
+                $('#permissions2').prop('checked', true);
+                $('#permissions2').attr("disabled", true);
+                $('#permissions3').prop('checked', true);
+                $('#permissions3').attr("disabled", true);
+                $('#permissions4').prop('checked', true);
+                $('#permissions4').attr("disabled", true);
+                $('#permissions5').prop('checked', true);
+            } else {
+                $('#permissions1').prop('checked', false);
+                $('#permissions1').attr("disabled", false);
+                $('#permissions2').prop('checked', false);
+                $('#permissions2').attr("disabled", false);
+                $('#permissions3').prop('checked', false);
+                $('#permissions3').attr("disabled", false);
+                $('#permissions4').prop('checked', false);
+                $('#permissions4').attr("disabled", false);
+                $('#permissions5').prop('checked', false);
+            }
+        });
+
+        $('#permissions-e-0').change(function () {
+            if (this.checked) {
+                $('#permissions-e-1').prop('checked', true);
+                $('#permissions-e-1').attr("disabled", true);
+                $('#permissions-e-2').prop('checked', true);
+                $('#permissions-e-2').attr("disabled", true);
+                $('#permissions-e-3').prop('checked', true);
+                $('#permissions-e-3').attr("disabled", true);
+                $('#permissions-e-4').prop('checked', true);
+                $('#permissions-e-4').attr("disabled", true);
+                $('#permissions-e-5').prop('checked', true);
+            } else {
+                $('#permissions-e-1').prop('checked', false);
+                $('#permissions-e-1').attr("disabled", false);
+                $('#permissions-e-2').prop('checked', false);
+                $('#permissions-e-2').attr("disabled", false);
+                $('#permissions-e-3').prop('checked', false);
+                $('#permissions-e-3').attr("disabled", false);
+                $('#permissions-e-4').prop('checked', false);
+                $('#permissions-e-4').attr("disabled", false);
+                $('#permissions-e-5').prop('checked', false);
+            }
+        });
+
+        function deletePhoto() {
+            $("#deletePhoto").val("true");
+        }
+
+    </script>
+<% end %>
+

@@ -1,0 +1,262 @@
+<% content_for :head do %>
+<!-- Vendor CSS -->
+<link href="/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/sweetalert2/dist/sweetalert.css" rel="stylesheet">
+<link href="/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+<link href="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="/vendors/weekline/jquery.weekLine-white.css " rel="stylesheet" />
+<!-- CSS -->
+<link href="/css/app_1.min.css" rel="stylesheet">
+<link href="/css/app_2.min.css" rel="stylesheet">
+<% end %>
+<%= render partial: 'layouts/console/header' %>
+<section id="main">
+   <%= render partial: 'layouts/console/sideBar' %>
+   <section id="content">
+      <div class="container">
+         <div class="block-header" id="main-header">
+            <h2>Horarios de Atención </h2>
+         </div>
+
+
+        <div class="card" id="lab_data">
+            <div class="card-header">
+                <h2>Datos de la Sede</h2>
+            </div>
+            <div class="card-body card-padding" style="padding-bottom: 0px;">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="inputCity" class="col-sm-2 control-label">Ciudad:</label>
+                        <div class="col-sm-4">
+                            <div class="fg-line">
+                                <input type="text" class="form-control input-sm" id="inputCity" value="<%=@lab.city%>" disabled>
+                            </div>  
+                        </div>
+                        <label for="inputAddress" class="col-sm-1 control-label">Dirección:</label>
+                        <div class="col-sm-4">
+                            <div class="fg-line">
+                                <input type="text" class="form-control input-sm" id="inputAddress"
+                                placeholder="Dirección" name="lab[address]" value="<%=@lab.address%>" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </form>
+            </div>
+        </div>
+
+         <div class="card" id="form-time_range-new" style="display:none;">
+            <form class="form-horizontal" role="form" id="newForm">
+                <div class="card-header">
+                    <h2>Nuevo horario de atención</h2>
+                </div>
+                <div class="card-body card-padding" style="padding-bottom: 0px;">
+                    <div class="form-group" id="availabilityField">
+                        <label for="inputDocument" class="col-sm-2 control-label">Horarios de atención:</label>
+                        <div id="">
+                            <div class="col-sm-3">
+                                <div class="fg-line">
+                                    <select class="selectpicker" id="dayPicker" name="time_range[weekday]" required>
+                                        <option value="1">Lunes</option>
+                                        <option value="2">Martes</option>
+                                        <option value="3">Miercoles</option>
+                                        <option value="4">Jueves</option>
+                                        <option value="5">Viernes</option>
+                                        <option value="6">Sabado</option>
+                                        <option value="0">Domingo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="fg-line">
+                                    <input type='text' class="form-control time-picker"
+                                        placeholder="Hora de Inicio..." name="time_range[start_time]" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="fg-line">
+                                    <input type='text' class="form-control time-picker"
+                                        placeholder="Hora de Fin..." name="time_range[end_time]" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-3 text-center">
+                            <button type="submit" class="btn btn-primary waves-effect">Agregar horario</button>
+                        </div>
+                        <div class="col-sm-3 text-center">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="cancelCreate()">Cancelar</button>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </form>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h2 style="display: inline-block;">Horarios de Atención</h2>
+                <%= button_tag(type: 'button', class: "btn btn-success btn-sm pull-right",style:"display: inline-block; width: 160px; height: 35px;" ,onclick: "createTimeRange(this)", data: {labid: @lab.id} )do %>
+                            Nuevo
+                            <% end %>
+            </div>
+            <div class="table-responsive">
+                <table id="data-table-basic" class="table table-striped display">
+                <thead>
+                    <tr>
+                        <!-- TODO: Campos para mostrar en la tabla de todas las sedes -->
+                        <th>Dia</th>
+                        <th>Hora de Inicio</th>
+                        <th>Hora de Fin</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Dia</th>
+                        <th>Hora de Inicio</th>
+                        <th>Hora de Fin</th>
+                        <th>Acciones</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <% @lab_time_ramges.each do |time_range| %>
+                    <tr>
+                        <td><%=I18n.t(:"date.day_names")[time_range.weekday]%></td>
+                        <td><%=time_range.start_time.strftime("%I:%M %p")%></td>
+                        <td><%=time_range.end_time.strftime("%I:%M %p")%></td>
+                        <td>
+                            <!--TODO: Agregar id al arreglo de datos-->
+                            <%= button_tag(type: 'button', class: "btn btn-danger btn-icon waves-effect waves-circle waves-float", onclick: "deleteTimeRange(this)", data: {id: time_range.id} )do %>
+                            <i class="zmdi zmdi-delete"></i>
+                            <% end %>
+                        </td>
+                    </tr>
+                    <% end %>
+                </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+   </section>
+</section>
+<%= render partial: 'layouts/console/footer' %>
+<% content_for :bottom do %>
+<!-- Javascript Libraries -->
+<script src="/vendors/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/vendors/bower_components/Waves/dist/waves.min.js"></script>
+<script src="/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+<script src="/vendors/bower_components/sweetalert2/dist/sweetalert.min.js"></script>
+<script src="/vendors/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script src="/vendors/fileinput/fileinput.min.js"></script>
+<script src="/vendors/bower_components/moment/min/moment.min.js"></script>
+<script src="/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/vendors/weekline/jquery.weekLine.js"></script> 
+<!-- Placeholder for IE9 -->
+<!--[if IE 9 ]>
+<script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+<![endif]-->
+<script src="/js/app.min.js"></script>
+<script type="text/javascript">
+   $(document).ready(function() {
+       $('#data-table-basic').DataTable();
+   
+   } );
+   
+
+                function createTimeRange(obj){
+                   $('#form-time_range-new').show('slow');
+                    var action = '/labs/' + ($(obj).data('labid')) + '/time_ranges/new'
+                    $('#newForm').attr('data-action', action);
+                    $(document).scrollTop($("#content").offset().top);
+               }
+
+               
+
+               function cancelCreate(){
+                   $('#form-time_range-new').hide('slow');
+               }
+   
+
+            $('#newForm').submit(function(e){
+                    var formData = new FormData($(this)[0]);
+                    var formAction = $(this).attr('data-action');
+                    $.ajax({
+                        url: formAction,
+                        data: formData,
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        type: "POST",
+                        
+                        success: function(data){
+                            swal({
+                                    title: "", 
+                                    text: data.success, 
+                                    type: "success"
+                                },function(){
+                                    location.reload();
+                                });
+                        },
+                        error: function(data){
+                            swal("", data.responseJSON.errors, "error")
+                        }
+                    });
+                    e.preventDefault();
+                });
+
+  
+   function deleteTimeRange(obj){
+                   swal({
+                   title: "Está seguro?",
+                   text: "Se eliminará el horario de atención de la Sede",
+                   type: "warning",
+                   showCancelButton: true,
+                   confirmButtonColor: "#DD6B55",
+                   confirmButtonText: "Confirmar",
+                   closeOnConfirm: false
+                   },
+                   function(){
+                       $.ajax({
+                           url: '/time_ranges/' + $(obj).data('id'),
+                           type: 'DELETE',
+                           success: function(result) {
+                               swal({
+                                   title: "", 
+                                   text: result.success, 
+                                   type: "success"
+                               },function(){
+                                   location.reload();
+                               });
+                           },
+                           error: function(data){
+                           swal("", data.responseJSON.error, "error")
+                       }
+                       });
+                   });
+                   
+                   };
+   
+   
+                   
+</script>
+<script type="text/javascript">
+   $(document).ready(function() {
+   
+       $("#weekCal").weekLine({
+           onChange: function () {
+               // $("#selectedDays").html(
+               //     $(this).weekLine('getSelected', 'indexes')
+               // );
+               // TODO: Retorna los dias seleccionadosÏ
+           }
+       });
+   } );
+</script>
+<% end %>

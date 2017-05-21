@@ -1,0 +1,553 @@
+<% content_for :head do %>
+    <!-- Vendor CSS -->
+    <link href="vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+    <link href="vendors/bower_components/sweetalert2/dist/sweetalert.css" rel="stylesheet">
+    <link href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+    <link href="vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+    <link href="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+    <link href="vendors/bower_components/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+
+
+    <!-- CSS -->
+    <link href="css/app_1.min.css" rel="stylesheet">
+    <link href="css/app_2.min.css" rel="stylesheet">
+<% end %>
+
+<%= render partial: 'layouts/console/header' %>
+
+<section id="main">
+
+  <%= render partial: 'layouts/console/sideBar' %>
+
+  <section id="content">
+    <div class="container">
+      <div class="block-header" id="title_header">
+        <h2>USUARIOS</h2>
+      </div>
+
+      <div class="card" id="form-user" style="display: none">
+
+        <form class="form-horizontal" role="form" id="modifyForm" action="">
+          <div class="card-header">
+            <h2>Editar Usuario
+              <small>Modifique los datos del usuario</small>
+            </h2>
+          </div>
+
+          <div class="card-body card-padding">
+            <div class="form-group">
+              <label for="inputType" class="col-sm-offset-1 col-sm-2 control-label">Tipo:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <!-- TODO: Añadir valor name -->
+                  <select class="selectpicker" id="inputType" name="user[user_type]">
+                    <option value="0">EPS</option>
+                    <option value="1">IPS</option>
+                    <option value="2">Particular</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputName" class="col-sm-offset-1 col-sm-2 control-label">Nombre:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="text" class="form-control input-sm" id="inputName"
+                         placeholder="Nombre" name="user[name]" required>
+                </div>
+              </div>
+            </div>
+            <div class="form-group" id="formEditLastName">
+              <label for="inputLastName" class="col-sm-offset-1 col-sm-2 control-label">Apellido:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="text" class="form-control input-sm" id="inputLastName"
+                         placeholder="Apellido" name="user[lastname]">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputCity" class="col-sm-offset-1 col-sm-2 control-label">Ciudad:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <!-- TODO: Cambiar valor name=""-->
+
+                  <select class="selectpicker" id="inputCity" name="user[city]">
+                    <%= render partial: 'partials/cities' %>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputDocument" class="col-sm-offset-1 col-sm-2 control-label" id="labelNewDoc">Documento:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="number" class="form-control input-sm" id="inputDocument"
+                         placeholder="Documento" name="user[doc]" required>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail" class="col-sm-offset-1 col-sm-2 control-label">Correo electrónico:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="email" class="form-control input-sm" id="inputEmail"
+                         placeholder="Correo" name="user[email]" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputAddress" class="col-sm-offset-1 col-sm-2 control-label">Dirección:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="text" class="form-control input-sm" rows="5" id="inputAddress"
+                         placeholder="Dirección" name="user[address]"></input>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPhone" class="col-sm-offset-1 col-sm-2 control-label">Teléfono:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="number" class="form-control input-sm" rows="5" id="inputPhone"
+                         placeholder="Teléfono" name="user[phone]"></input>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-3 text-center">
+                <button type="submit" class="btn btn-success btn-sm">Editar usuario</button>
+              </div>
+              <div class="col-sm-3 text-center">
+                <button type="button" class="btn btn-danger btn-sm" onclick="cancelEdit()">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="card" id="formNewUser" style="display: none">
+
+        <form class="form-horizontal" role="form" id="newForm" action="">
+          <div class="card-header">
+            <h2>Crear Usuario
+              <small>Ingrese los datos del nuevo usuario</small>
+            </h2>
+          </div>
+
+          <div class="card-body card-padding">
+            <div class="form-group">
+              <label for="userTypeSelect" class="col-sm-offset-1 col-sm-2 control-label">Tipo:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <!-- TODO: Cambiar valor name=""-->
+                  <select class="selectpicker" id="userTypeSelect" name="user[user_type]">
+                    <option value="0">EPS</option>
+                    <option value="1">IPS</option>
+                    <option value="2" selected="selected">Particular</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputNewName" class="col-sm-offset-1 col-sm-2 control-label">Nombre:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="text" class="form-control input-sm" id="inputNewName"
+                         placeholder="Nombre" name="user[name]" required>
+                </div>
+              </div>
+            </div>
+            <div class="form-group" id="formLastName">
+              <label for="inputNewLastName" class="col-sm-offset-1 col-sm-2 control-label">Apellido:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="text" class="form-control input-sm" id="inputNewLastName"
+                         placeholder="Apellido" name="user[lastname]">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputNewDocument" class="col-sm-offset-1 col-sm-2 control-label" id="labelDoc">Documento:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="number" class="form-control input-sm" id="inputNewDocument"
+                         placeholder="Documento" name="user[doc]" required>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputNewCity" class="col-sm-offset-1 col-sm-2 control-label">Ciudad:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <!-- TODO: Cambiar valor name=""-->
+                  <select class="selectpicker" id="inputNewCity" name="user[city]">
+                    <%= render partial: 'partials/cities' %>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputNewEmail" class="col-sm-offset-1 col-sm-2 control-label">Correo electrónico:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="email" class="form-control input-sm" id="inputNewEmail"
+                         placeholder="Correo" name="user[email]" required>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputNewAddress" class=" col-sm-offset-1 col-sm-2 control-label">Dirección:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="text" class="form-control input-sm" rows="5" id="inputNewAddress"
+                         placeholder="Dirección" name="user[address]"></input>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputNewPhone" class="col-sm-offset-1 col-sm-2 control-label">Teléfono:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <input type="number" class="form-control input-sm" rows="5" id="inputNewPhone"
+                         placeholder="Teléfono" name="user[phone]"></input>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-3 text-center">
+                <button type="submit" class="btn btn-success btn-sm">Crear usuario</button>
+              </div>
+              <div class="col-sm-3 text-center">
+                <button type="button" class="btn btn-danger btn-sm" onclick="cancelCreate()">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 style="display: inline-block;">Lista de usuarios
+          </h2>
+          <button type="button" class="btn btn-success btn-sm pull-right" style="display: inline-block; width: 160px; height: 35px;" onclick="createUser()">Crear
+            usuario
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table id="data-table-basic" class="table table-striped">
+            <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Nombre</th>
+              <th>Ciudad</th>
+              <th>Documento/NIT</th>
+              <th>Correo</th>
+              <th>Dirección</th>
+              <th>Teléfono</th>
+              <th>Creador</th>
+              <th>Acciones</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+              <th>Tipo</th>
+              <th>Nombre</th>
+              <th>Ciudad</th>
+              <th>Documento/NIT</th>
+              <th>Correo</th>
+              <th>Dirección</th>
+              <th>Teléfono</th>
+              <th>Creador</th>
+              <th>Acciones</th>
+            </tr>
+            </tfoot>
+            <tbody>
+            <% @users.each do |user| %>
+                <tr>
+                  <td><!-- TODO: Añadir valor del tipo de usuario --> <%= user.type_string %> </td>
+                  <td><%= user.complete_name %></td>
+                  <td><!-- TODO: Añadir valor de ciudad --> <%= user.city %></td>
+                  <td><%= user.doc %></td>
+                  <td><%= user.email %></td>
+                  <td><%= user.address %></td>
+                  <td><%= user.phone %></td>
+                  <td><%= user.admin ? user.admin.name : "Sistema" %></td>
+                  <!-- TODO: agregar valor type al arreglo que reciba el tipo de usuario y la ciudad -->
+                  <td><%= button_tag(type: 'button', class: "btn btn-primary btn-icon waves-effect waves-circle waves-float", onclick: "modifyUser(this)", data: {id: user.id, name: user.name, lastname: user.lastname, doc: user.doc, email: user.email, address: user.address, phone: user.phone, usertype: user.user_type, city: user.city}) do %>
+                        <i class="zmdi zmdi-edit"></i>
+                    <% end %>
+                    <%= button_tag(type: 'button', class: "btn btn-danger btn-icon waves-effect waves-circle waves-float", onclick: "deleteUser(this)", data: {id: user.id}) do %>
+                        <i class="zmdi zmdi-delete"></i>
+                    <% end %>
+                    <%= button_tag(type: 'button', class: "btn btn-success btn-icon waves-effect waves-circle waves-float", onclick: "newPassword(this)", data: {id: user.id}) do %>
+                        <i class="zmdi zmdi-refresh-sync-alert"></i>
+                    <% end %>
+                  </td>
+                  <!--<%= link_to('Logout', destroy_user_session_path, :method => :delete) %>  -->
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</section>
+
+<%= render partial: 'layouts/console/footer' %>
+
+<% content_for :bottom do %>
+    <!-- Javascript Libraries -->
+    <script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
+    <script src="vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+    <script src="vendors/bower_components/sweetalert2/dist/sweetalert.min.js"></script>
+    <script src="vendors/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+
+
+    <!-- Placeholder for IE9 -->
+    <!--[if IE 9 ]>
+    <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+    <![endif]-->
+
+    <script src="js/app.min.js"></script>
+
+    <script>
+        $("#userTypeSelect").on("change", function () {
+            if ($(this).val() == '0') {
+                $('#formLastName').addClass('hidden');
+                $('#labelDoc').text('NIT');
+                $('#inputNewDocument').attr('placeholder', 'NIT');
+                $('#inputNewLastName').val('');
+            } else if ($(this).val() == '1') {
+                $('#formLastName').addClass('hidden');
+                $('#labelDoc').text('NIT');
+                $('#inputNewDocument').attr('placeholder', 'NIT');
+                $('#inputNewLastName').val('');
+            } else if ($(this).val() == '2') {
+                $('#formLastName').removeClass('hidden');
+                $('#labelDoc').text('Documento');
+                $('#inputNewDocument').attr('placeholder', 'Documento');
+            }
+        })
+        $("#inputType").on("change", function () {
+            if ($(this).val() == '0') {
+                $('#formEditLastName').addClass('hidden');
+                $('#labelNewDoc').text('NIT');
+                $('#inputDocument').attr('placeholder', 'NIT');
+                $('#inputLastName').val('');
+            } else if ($(this).val() == '1') {
+                $('#formEditLastName').addClass('hidden');
+                $('#labelNewDoc').text('NIT');
+                $('#inputDocument').attr('placeholder', 'NIT');
+                $('#inputLastName').val('');
+            } else if ($(this).val() == '2') {
+                $('#formEditLastName').removeClass('hidden');
+                $('#labelNewDoc').text('Documento');
+                $('#inputDocument').attr('placeholder', 'Documento');
+            }
+        })
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#data-table-basic').DataTable({
+                scrollX: true,
+                scrollCollapse: true,
+                "columns": [
+                    null,
+                    {"width": "150"},
+                    {"width": "100"},
+                    {"width": "135"},
+                    null,
+                    {"width": "100"},
+                    {"width": "100"},
+                    {"width": "100"},
+                    {"width": "135"},
+                ]
+            });
+        });
+
+        //Warning Message
+        function deleteUser(obj) {
+
+            swal({
+                    title: "Está seguro?",
+                    text: "No se podran recuperar lo datos del usuario en un futuro",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Confirmar",
+                    closeOnConfirm: false
+                },
+                function () {
+                    $.ajax({
+                        url: 'users/' + $(obj).data('id'),
+                        type: 'DELETE',
+                        success: function (result) {
+                            swal({
+                                title: "",
+                                text: result.success,
+                                type: "success"
+                            }, function () {
+                                location.reload();
+                            });
+                        },
+                        error: function (data) {
+                            swal("", data.responseJSON.error, "error")
+                        }
+                    });
+                });
+        }
+
+        function newPassword(obj) {
+            swal({
+                    title: "Está seguro?",
+                    text: "Se generará una nueva contraseña para el usuario y se eliminará el acceso con la contraseña anterior",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Confirmar",
+                    closeOnConfirm: false
+                },
+                function () {
+                    $.ajax({
+                        url: 'users/' + $(obj).data('id') + "/regenerate_user_password",
+                        type: 'POST',
+                        success: function (result) {
+                            swal({
+                                title: "",
+                                text: result.success,
+                                type: "success"
+                            }, function () {
+                                location.reload();
+                            });
+                        },
+                        error: function (data) {
+                            swal("", data.responseJSON.message, "error")
+                        }
+                    });
+                });
+        }
+    </script>
+    <script type="text/javascript">
+        function modifyUser(obj) {
+            // TODO: el valor type y ciudad debe ser el mismo que se agrega al arreglo de editar
+            if ($(obj).data('type') == "EPS") {
+                $('#formEditLastName').addClass('hidden');
+                $('#labelNewDoc').text('NIT');
+                $('#inputDocument').attr('placeholder', 'NIT');
+                $('#inputLastName').val('');
+            } else if ($(obj).data('type') == "IPS") {
+                $('#formLastName').addClass('hidden');
+                $('#labelNewDoc').text('NIT');
+                $('#inputDocument').attr('placeholder', 'NIT');
+                $('#inputLastName').val('');
+            } else if ($(obj).data('type') == "Particular") {
+                $('#formEditLastName').removeClass('hidden');
+                $('#labelNewDoc').text('Documento');
+                $('#inputDocument').attr('placeholder', 'Documento');
+            }
+            $('#inputType').val($(obj).data('usertype')).change();
+            $('#inputName').val($(obj).data('name'));
+            $('#inputLastName').val($(obj).data('lastname'));
+            $('#inputCity').val($(obj).data('city')).change();
+            $('#inputDocument').val($(obj).data('doc'));
+            $('#inputEmail').val($(obj).data('email'));
+            $('#inputAddress').val($(obj).data('address'));
+            $('#inputPhone').val($(obj).data('phone'));
+            var action = 'users/' + ($(obj).data('id'))
+            $('#modifyForm').attr('data-action', action);
+            if ($('#formNewUser').is(':visible')) {
+                $('#formNewUser').hide('slow');
+            }
+            $('#form-user').show('slow');
+            $(document).scrollTop($("#title_header").offset().top);
+        }
+
+        function cancelEdit() {
+            $('#form-user').hide('slow');
+        }
+
+        $('#modifyForm').submit(function (e) {
+            var formData = new FormData($(this)[0]);
+            var formAction = $(this).attr('data-action');
+            $.ajax({
+                url: formAction,
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                type: "PUT",
+
+                success: function (data) {
+                    swal({
+                        title: "",
+                        text: data.success,
+                        type: "success"
+                    }, function () {
+                        location.reload();
+                    });
+                },
+                error: function (data) {
+                    swal("", data.responseJSON.message, "error")
+                }
+            });
+            e.preventDefault();
+        });
+    </script>
+
+    <script type="text/javascript">
+        function createUser() {
+            var action = 'users'
+            $('#newForm').attr('data-action', action);
+            if ($('#form-user').is(':visible')) {
+                $('#form-user').hide('slow');
+            }
+            $('#formNewUser').show('slow');
+            window.location.hash = 'formNewUser';
+        }
+
+
+        function cancelCreate() {
+            $('#formNewUser').hide('slow');
+        }
+
+        $('#newForm').submit(function (e) {
+            var formData = new FormData($(this)[0]);
+
+            $.ajax({
+                url: "users/",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                type: "POST",
+
+                success: function (data) {
+                    swal({
+                        title: "",
+                        text: data.success,
+                        type: "success"
+                    }, function () {
+                        location.reload();
+                    });
+                },
+                error: function (data) {
+                    swal("", data.responseJSON.message, "error")
+                }
+            });
+            e.preventDefault();
+        });
+    </script>
+<% end %>
+        
+
