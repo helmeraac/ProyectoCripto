@@ -3,4 +3,8 @@ class Tag < ApplicationRecord
   has_many :posts, through: :taggings
 
   validates :name, presence: true, length: {in: 3..150},uniqueness:true
+
+  def to_s
+    name
+  end
 end

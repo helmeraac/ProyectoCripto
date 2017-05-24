@@ -61,14 +61,16 @@
           </ul>
       </li>
     <% end %>
+    <% if (current_admin.get_processed_permissions & [Admin::MASTER, Admin::NEWS]).any? %>
       <li class="sub-menu">
           <a href="/" data-ma-action="submenu-toggle"><i class="zmdi zmdi-file-plus"></i> Noticias</a>
           <ul>
-              <li><a href="/news/index">Lista</a></li>
-              <li><a href="/categories/index">Categorias</a></li>
-              <li><a href="/tags/index">Tags</a></li>
+              <li><a href="/posts">Lista</a></li>
+              <li><a href="/categories">Categorias</a></li>
+              <li><a href="/tags">Tags</a></li>
           </ul>
       </li>
+    <% end %>
   </ul>
 </aside>
 

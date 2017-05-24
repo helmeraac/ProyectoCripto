@@ -64,8 +64,8 @@
                         <tr>
                             <th><%= pickup_request.status_string %></th>
                             <td><%= pickup_request.address %></td>
-                            <td><%= pickup_request.user.name %></td>
-                            <td><%= pickup_request.user.email %></td>
+                            <td><%= pickup_request.user.name %> <%= pickup_request.user.lastname if !pickup_request.user.lastname.nil? %></td>
+                            <td><%= pickup_request.user.email %> </td>
                             <td><%= pickup_request.user.phone %></td>
                             <td><%= pickup_request.message %></td>
                             <td>

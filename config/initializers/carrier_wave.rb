@@ -2,8 +2,8 @@ CarrierWave.configure do |config|
   config.fog_provider = 'fog/aws'
   config.fog_credentials = {
       :provider => 'AWS',
-      :aws_access_key_id => 'AKIAJF47SUXHK2TWKI3Q',
-      :aws_secret_access_key => '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',
+      :aws_access_key_id => 'AKIAI7XTYFSJWBQYFUJQ',
+      :aws_secret_access_key => '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',
       :region => 'us-west-2'
   }
 
@@ -11,7 +11,7 @@ CarrierWave.configure do |config|
       :cache_control => 'max-age=315576000', :expires => 1.year.from_now.httpdate
   }
 
-  if Rails.env.test? or Rails.env.cucumber?
+  if Rails.env.test? || Rails.env.cucumber? || Rails.env.development?
     config.storage = :file
     config.enable_processing = false
   else

@@ -6,6 +6,7 @@ class Lab < ApplicationRecord
 
   validates :city, presence: true, length: {in: 3..150}, uniqueness: true
   validates :address, presence: true, length: {in: 10..150}
+  validates :phone, presence: true, length: {in: 7..10}
 
   def calculate_availability (datetime)
     available_hours = []
@@ -20,7 +21,7 @@ class Lab < ApplicationRecord
       end
     end
 
-    existing_appointments = Appointment.find_by_date(datetime)
+    existing_appointments = Appointment.find_requested_by_date(datetime)
 
     existing_appointments.each do |ea|
       hour = ea.date.strftime("%I:%M %p")

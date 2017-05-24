@@ -24,7 +24,7 @@ module AppointmentsHelper
     end
     if @appointment.save
       if @appointment.status == Appointment::CANCELED
-        UserMailer.canceled_appointment_mail(@appointment.user,@appointment.date.to_i).deliver_later
+        UserMailer.canceled_appointment_mail(@appointment.user,@appointment.date.to_i,@appointment.lab.city,@appointment.lab.address,@appointment.lab.phone).deliver_later
       end
       render status: 200, json: {success: I18n.translate('models.appointment.status_changed', new_status: @appointment.status_string)}
     else

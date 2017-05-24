@@ -3,13 +3,18 @@
         <%= email_image_tag("logo.png", class: "banner-image") %>
     </div>
     <div class="mail-text">
-        <p>Hola, <%= @user.name %> <%= @user.lastname if !@user.lastname.nil?%>:</p>
-        <p>Su cita programada para el día <strong><%= @appointment_date %></strong> a las <strong><%= @appointment_hour %></strong> ha sido cancelada,
-        en caso de tratarse de un error por favor comuníquese lo más pronto con la sede correspondiente.</p>
+        <p>Hola, <strong><%= @user.name %> <%= @user.lastname if !@user.lastname.nil?%></strong>:</p>
+        <p>Su cita programada para el día <strong><%= @appointment_date %></strong> a las <strong><%= @appointment_hour %></strong> en la sede <strong><%= @lab %></strong> ha sido cancelada correctamente. <br>
+        Si no fue usted quien realizó el proceso o considera que es incorrecto, por favor comuníquese lo más pronto con la sede correspondiente.</p>
         <div class="credentials">
-            <p><strong>Fecha:</strong><%= @appointment_date %></p>
-            <p><strong>Hora:</strong><%= @appointment_hour %></p>
-            <p><strong>Estado:</strong>CANCELADA</p>
+            <p>Fecha: <strong><%= @appointment_date %></strong>
+              <br>Hora: <strong><%= @appointment_hour %></strong>
+            </p>
+            <p>Sede: <strong><%= @lab %></strong>
+              <br>Dirección: <strong><%= @lab_address %></strong>
+              <br>Teléfono: <strong><%= @lab_phone %></strong>
+            </p>
+            <p>Estado: <strong>CANCELADA</strong></p>
         </div>
         <div class="mail-footer">
             **Esto ha sido una notificación automática, por favor no responder 

@@ -66,11 +66,18 @@ gem 'factory_girl_rails'
 # Rails Controller testing
 gem 'rails-controller-testing'
 
-#Rails File Uploaded
+#Rails File Uploaded to S3
 gem 'fog-aws'
 gem 'carrierwave'
+
+#Image resize and compression
 gem "mini_magick"
 
 #Delayed Jobs
 gem 'delayed_job_active_record'
+
+#Cron Jobs
 gem 'whenever', :require => false
+
+#Pagination
+gem 'will_paginate'

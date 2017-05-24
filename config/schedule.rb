@@ -20,5 +20,5 @@
 # Learn more: http://github.com/javan/whenever
 
 every 1.day, :at => '08:00 pm' do
-  runner 'AppointmentRemindersJob.perform_later(Appointment.find_to_reminder(Time.now+1.days).collect {|a| a.user},Appointment.find_to_reminder(Time.now+1.days).collect {|a| a.date.to_i})'
+  runner 'AppointmentRemindersJob.perform_later(Appointment.find_to_reminder(Time.now+1.days).collect {|a| a.user},Appointment.find_to_reminder(Time.now+1.days).collect {|a| a.date.to_i},Appointment.find_to_reminder(Time.now+1.days).collect {|a| a.lab.city.to_s},Appointment.find_to_reminder(Time.now+1.days).collect {|a| a.lab.address.to_s},Appointment.find_to_reminder(Time.now+1.days).collect {|a| a.lab.phone.to_s})'
 end

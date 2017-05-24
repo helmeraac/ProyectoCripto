@@ -1,4 +1,7 @@
 FactoryGirl.define do
+  factory :post_image do
+    image "MyString"
+  end
   factory :time_range do
     weekday 1
     start_time "2017-04-26 19:48:01"

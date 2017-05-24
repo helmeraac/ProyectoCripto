@@ -1,232 +1,240 @@
-
-
 <% content_for :head do %>
 
-<!-- Vendor CSS -->
-<link href="/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
-<link href="/vendors/bower_components/sweetalert2/dist/sweetalert.css" rel="stylesheet">
-<link href="/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
-<link href="/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
-<link href="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
-<link href="/vendors/bower_components/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
+    <!-- Vendor CSS -->
+    <link href="/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+    <link href="/vendors/bower_components/sweetalert2/dist/sweetalert.css" rel="stylesheet">
+    <link href="/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+    <link href="/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+    <link href="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+    <link href="/vendors/bower_components/datatables.net-dt/css/jquery.dataTables.min.css" rel="stylesheet">
 
-<!-- CSS -->
-<link href="/css/app_1.min.css" rel="stylesheet">
-<link href="/css/app_2.min.css" rel="stylesheet">
+    <!-- CSS -->
+    <link href="/css/app_1.min.css" rel="stylesheet">
+    <link href="/css/app_2.min.css" rel="stylesheet">
 
 <% end %>
 
 <% if defined? session[:error_notice] != nil %>
-<input id="error_notice" type="text" name="error_notice" hidden="hidden" value="<%= session[:error_notice] %>">
-<%=session[:error_notice] = nil%>
+    <input id="error_notice" type="text" name="error_notice" hidden="hidden" value="<%= session[:error_notice] %>">
+    <%= session[:error_notice] = nil %>
 <% end %>
 <% if defined? session[:success_notice] != nil %>
-<input id="success_notice" type="text" name="success_notice" hidden="hidden" value="<%= session[:success_notice] %>">
-<%=session[:success_notice] = nil%>
+    <input id="success_notice" type="text" name="success_notice" hidden="hidden" value="<%= session[:success_notice] %>">
+    <%= session[:success_notice] = nil %>
 <% end %>
 <%= render partial: 'layouts/console/header' %>
 
 <section id="main">
 
-    <%= render partial: 'layouts/console/sideBar' %>
+  <%= render partial: 'layouts/console/sideBar' %>
 
-    <section id="content">
-        <div class="container">
-            <div class="block-header">
-                <h2>CITAS</h2>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h2>
-                      <% if @status == Appointment::CONFIRMED %>
-                        Citas confirmadas
-                      <% elsif @status == Appointment::CANCELED %>
-                        Citas canceladas
-                      <% elsif @status == Appointment::CONFIRMED %>
-                        Citas completadas
-                      <% end %>
-                    </h2>
-                </div>
-
-                <div class="table-responsive">
-                    <table id="data-table-basic" class="table table-striped display">
-                        <thead>
-                        <tr>
-                          <!-- TODO: Campos para mostrar en la tabla de todos los usuarios -->
-                            <th>Sede</th>
-                            <th>Fecha - Hora</th>
-                            <% if @status == Appointment::CONFIRMED %>
-                                <th>Usuario solicitante</th>
-                            <% elsif @status == Appointment::CANCELED %>
-                                <th>Usuario solicitante</th>
-                                <th>Administrador que canceló</th>
-                            <% elsif @status == Appointment::COMPLETED %>
-                                <th>Usuario solicitante</th>
-                                <th>Administrador que confirmó</th>
-                            <% end %>
-                            <% if @status == Appointment::CONFIRMED %>
-                              <th>Estado/Editar/Cancelar</th>
-                            <% elsif @status == Appointment::CANCELED %>
-                            <% elsif @status == Appointment::COMPLETED %>
-                            <% end %>
-                        </tr>
-                        </thead>
-                        <tfoot>
-                        <tr>
-                            <th>Sede</th>
-                            <th>Fecha - Hora</th>
-                            <% if @status == Appointment::CONFIRMED %>
-                                <th>Usuario solicitante</th>
-                            <% elsif @status == Appointment::CANCELED %>
-                                <th>Usuario solicitante</th>
-                                <th>Administrador que canceló</th>
-                            <% elsif @status == Appointment::COMPLETED %>
-                                <th>Usuario solicitante</th>
-                                <th>Administrador que confirmó</th>
-                            <% end %>
-                            <% if @status == Appointment::CONFIRMED %>
-                                <th>Estado/Editar/Cancelar</th>
-                            <% elsif @status == Appointment::CANCELED %>
-                            <% elsif @status == Appointment::COMPLETED %>
-                            <% end %>
-                        </tr>
-                        </tfoot>
-                        <tbody>
-                        <% @appointments_list.each do |appointment| %>
-                        <tr>
-                            <td><%= appointment.lab %></td>
-                            <td><%= appointment.date.strftime("%m/%d/%Y") %> a las <%= appointment.date.strftime("%I:%M %p") %></td>
-                            <% if @status == Appointment::CONFIRMED %>
-                                <td>
-                                    <%= appointment.user.name %>
-                                    <% if appointment.user.lastname %>
-                                        <%= appointment.user.lastname %>
-                                    <% end %>
-                                </td>
-                            <% else %>
-                                <td>
-                                    <%= appointment.user.name %>
-                                    <% if appointment.user.lastname %>
-                                        <%= appointment.user.lastname %>
-                                    <% end %>
-                                </td>
-                                <td>
-                                    <% if appointment.admin %>
-                                        <%= appointment.admin.name %>
-                                    <% end %>
-                                </td>
-                            <% end %>
-                            <% if @status == Appointment::CONFIRMED %>
-                            <td>
-                                <%= button_tag(type: 'button', class: "btn btn-success btn-icon waves-effect waves-circle waves-float", onclick: "changeStateAppointment(2, this);", data: {id: appointment.id}) do %>
-                                    <i class="zmdi zmdi-refresh-sync-alert"></i>
-                                <% end %>
-                                <%= button_tag(type: 'button', class: "btn btn-warning btn-icon waves-effect waves-circle waves-float", onclick: "editAppointment(this);", data: {id: appointment.id}) do %>
-                                    <i class="zmdi zmdi-edit"></i>
-                                <% end %>
-                                <%= button_tag(type: 'button', class: "btn btn-danger btn-icon waves-effect waves-circle waves-float", onclick: "changeStateAppointment(1, this);", data: { id: appointment.id } )do %>
-                                    <i class="zmdi zmdi-block"></i>
-                                <% end %>
-                            </td>
-                            <% end %>
-                        </tr>
-                        <% end %>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
+  <section id="content">
+    <div class="container">
+      <div class="block-header">
+        <h2>CITAS</h2>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h2>
+            <% if @status == Appointment::CONFIRMED %>
+                Citas confirmadas
+            <% elsif @status == Appointment::CANCELED %>
+                Citas canceladas
+            <% elsif @status == Appointment::CONFIRMED %>
+                Citas completadas
+            <% end %>
+          </h2>
         </div>
-    </section>
+
+        <div class="table-responsive">
+          <table id="data-table-basic" class="table table-striped display">
+            <thead>
+            <tr>
+              <!-- TODO: Campos para mostrar en la tabla de todos los usuarios -->
+              <th>Sede</th>
+              <th>Fecha</th>
+              <% if @status == Appointment::CONFIRMED %>
+                  <th>Usuario solicitante</th>
+              <% elsif @status == Appointment::CANCELED %>
+                  <th>Usuario solicitante</th>
+                  <th>Administrador que canceló</th>
+                  <th>Fecha de Cancelación</th>
+              <% elsif @status == Appointment::COMPLETED %>
+                  <th>Usuario solicitante</th>
+                  <th>Administrador que confirmó</th>
+                  <th>Fecha de confirmación</th>
+              <% end %>
+              <% if @status == Appointment::CONFIRMED %>
+                  <th>Estado/Editar/Cancelar</th>
+              <% elsif @status == Appointment::CANCELED %>
+              <% elsif @status == Appointment::COMPLETED %>
+              <% end %>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+              <th>Sede</th>
+              <th>Fecha</th>
+              <% if @status == Appointment::CONFIRMED %>
+                  <th>Usuario solicitante</th>
+              <% elsif @status == Appointment::CANCELED %>
+                  <th>Usuario solicitante</th>
+                  <th>Administrador que canceló</th>
+                  <th>Fecha de Cancelación</th>
+              <% elsif @status == Appointment::COMPLETED %>
+                  <th>Usuario solicitante</th>
+                  <th>Administrador que confirmó</th>
+                  <th>Fecha de confirmación</th>
+              <% end %>
+              <% if @status == Appointment::CONFIRMED %>
+                  <th>Estado/Editar/Cancelar</th>
+              <% elsif @status == Appointment::CANCELED %>
+              <% elsif @status == Appointment::COMPLETED %>
+              <% end %>
+            </tr>
+            </tfoot>
+            <tbody>
+            <% @appointments_list.each do |appointment| %>
+                <tr>
+                  <td><%= appointment.lab %></td>
+                  <td><%= l(appointment.date, format: '%d de %B de %Y a las %I:%M %p') %></td>
+                  <% if @status == Appointment::CONFIRMED %>
+                      <td>
+                        <%= appointment.user.name %>
+                        <% if appointment.user.lastname %>
+                            <%= appointment.user.lastname %>
+                        <% end %>
+                      </td>
+                  <% else %>
+                      <td>
+                        <%= appointment.user.name %>
+                        <% if appointment.user.lastname %>
+                            <%= appointment.user.lastname %>
+                        <% end %>
+                      </td>
+                      <td>
+                        <% if appointment.admin %>
+                            <%= appointment.admin.name %>
+                        <% end %>
+                      </td>
+                      <td>
+                        <%= l(appointment.updated_at, format: '%d de %B de %Y a las %I:%M %p') %>
+                      </td>
+                  <% end %>
+                  <% if @status == Appointment::CONFIRMED %>
+                      <td>
+                        <%= button_tag(type: 'button', class: "btn btn-success btn-icon waves-effect waves-circle waves-float", onclick: "changeStateAppointment(2, this);", data: {id: appointment.id}) do %>
+                            <i class="zmdi zmdi-refresh-sync-alert"></i>
+                        <% end %>
+                        <%= button_tag(type: 'button', class: "btn btn-warning btn-icon waves-effect waves-circle waves-float", onclick: "editAppointment(this);", data: {id: appointment.id}) do %>
+                            <i class="zmdi zmdi-edit"></i>
+                        <% end %>
+                        <%= button_tag(type: 'button', class: "btn btn-danger btn-icon waves-effect waves-circle waves-float", onclick: "changeStateAppointment(1, this);", data: {id: appointment.id}) do %>
+                            <i class="zmdi zmdi-block"></i>
+                        <% end %>
+                      </td>
+                  <% end %>
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
 </section>
 
 <%= render partial: 'layouts/console/footer' %>
 
 <% content_for :bottom do %>
-<!-- Javascript Libraries -->
-<script src="/vendors/bower_components/jquery/dist/jquery.min.js"></script>
-<script src="/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Javascript Libraries -->
+    <script src="/vendors/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
-<script src="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/vendors/bower_components/Waves/dist/waves.min.js"></script>
-<script src="/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
-<script src="/vendors/bower_components/sweetalert2/dist/sweetalert.min.js"></script>
-<script src="/vendors/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+    <script src="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="/vendors/bower_components/Waves/dist/waves.min.js"></script>
+    <script src="/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+    <script src="/vendors/bower_components/sweetalert2/dist/sweetalert.min.js"></script>
+    <script src="/vendors/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
 
 
-<!-- Placeholder for IE9 -->
-<!--[if IE 9 ]>
+    <!-- Placeholder for IE9 -->
+    <!--[if IE 9 ]>
     <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
-<![endif]-->
+    <![endif]-->
 
-<script src="/js/app.js"></script>
+    <script src="/js/app.js"></script>
 
-<script>
-  $(document).ready(function() {
-        $('#data-table-basic').DataTable({
-            scrollX: true,
-            scrollCollapse: true,
-            "columns": [
-                { "width": "140" },
-                { "width": "250" },
-                { "width": "250" },
-                { "width": "200" },
-            ]
+    <script>
+        $(document).ready(function () {
+            $('#data-table-basic').DataTable({
+                scrollX: true,
+                scrollCollapse: true,
+                "columns": [
+                    {"width": "140"},
+                    {"width": "250"},
+                    {"width": "250"},
+                    {"width": "200"}
+                    <% if @status != Appointment::CONFIRMED%>
+                    ,{"width": "200"}
+                    <% end%>
+                ]
+            });
+            if ($('#error_notice').val()) {
+                swal({html: true, title: 'Error!', text: $('#error_notice').val(), type: "error"});
+            }
+            if ($('#success_notice').val()) {
+                swal({html: true, title: '', text: $('#success_notice').val(), type: "success"});
+            }
         });
-        if($('#error_notice').val()){
-            swal({ html:true, title:'Error!', text:$('#error_notice').val(), type: "error"});
-        }
-        if($('#success_notice').val()){
-            swal({ html:true, title:'', text:$('#success_notice').val(), type: "success"});
-        }
-    } );
 
-    function editAppointment(obj){
-        location.href = '/appointments/' + $(obj).data('id') + '/edit';
-    }
-
-    function changeStateAppointment(val, obj) {
-        if(val == 1){
-            text = "CANCELADA";
-            param = <%= Appointment::CANCELED %>;
-        }else if(val == 2){
-            text = "COMPLETADA";
-            param = <%= Appointment::COMPLETED %>;
+        function editAppointment(obj) {
+            location.href = '/appointments/' + $(obj).data('id') + '/edit';
         }
-        swal({
-            title: "Está seguro?",
-            text: "Se cambiará el estado de la cita a: " + text, // TODO
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Confirmar",
-            cancelButtonText: "Cancelar",
-            closeOnConfirm: false
-            },
-            function(){
-                //TODO: Request
-                $.ajax({
-                    url: '/appointments/' + $(obj).data('id') + '/change_state',
-                    type: 'PUT',
-                    data: {
-                        appointment :{status: param}
-                    },
-                    success: function(result) {
-                        swal({
-                            title: "", 
-                            text: result.success, 
-                            type: "success"
-                        },function(){
-                            location.reload();
-                        });
-                    },
-                    error: function(data){
-                    swal("", data.responseJSON.message, "error")
-                }
+
+        function changeStateAppointment(val, obj) {
+            if (val == 1) {
+                text = "CANCELADA";
+                param = <%= Appointment::CANCELED %>;
+            } else if (val == 2) {
+                text = "COMPLETADA";
+                param = <%= Appointment::COMPLETED %>;
+            }
+            swal({
+                    title: "Está seguro?",
+                    text: "Se cambiará el estado de la cita a: " + text, // TODO
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Confirmar",
+                    cancelButtonText: "Cancelar",
+                    closeOnConfirm: false
+                },
+                function () {
+                    //TODO: Request
+                    $.ajax({
+                        url: '/appointments/' + $(obj).data('id') + '/change_state',
+                        type: 'PUT',
+                        data: {
+                            appointment: {status: param}
+                        },
+                        success: function (result) {
+                            swal({
+                                title: "",
+                                text: result.success,
+                                type: "success"
+                            }, function () {
+                                location.reload();
+                            });
+                        },
+                        error: function (data) {
+                            swal("", data.responseJSON.message, "error")
+                        }
+                    });
+                    // swal("El estado ha sido cambiado!", "El estado de la recogida ha cambiado a: " + text);
                 });
-                // swal("El estado ha sido cambiado!", "El estado de la recogida ha cambiado a: " + text);
-        });
-    }
-</script>
+        }
+    </script>
 <% end %>

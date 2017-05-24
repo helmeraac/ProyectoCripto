@@ -44,7 +44,7 @@ es-CO:
         instruction: Alguien ha solicitado un enlace para cambiar su contraseña, lo que se puede realizar a través del siguiente enlace.
         instruction_2: Si usted no lo ha solicitado, por favor ignore este correo electrónico.
         instruction_3: Su contraseña no será cambiada hasta que usted acceda al enlace y cree una nueva contraseña.
-        subject: Instrucciones de recuperación de contraseña
+        subject: Instrucciones de recuperación de contraseña - Citopat de Colombia
       unlock_instructions:
         action: Desbloquear mi cuenta
         greeting: "¡Hola, %{recipient}!"

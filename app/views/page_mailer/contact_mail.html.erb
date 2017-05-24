@@ -1,0 +1,23 @@
+<div class="mail-container">
+  <div class="banner-container">
+    <%= email_image_tag("logo.png", class: "banner-image") %>
+  </div>
+  <div class="mail-text">
+    <p>Hola,</p>
+    <p>Un usuario ha pedido información a través del formulario de contacto de la página con los siguientes datos:</p>
+    <div class="credentials">
+      <p>Nombre: <strong><%= @name %></strong>
+      </p>
+      <p>Correo: <strong><%= @email %></strong>
+      </p>
+      <p>Teléfono: <strong><%= @phone %></strong>
+      </p>
+      <p>Mensaje: <strong><%= @message %></strong>
+      </p>
+    </div>
+    <div class="mail-footer">
+      **Esto ha sido una notificación automática, por favor no responder
+      a este correo**
+    </div>
+  </div>
+</div>

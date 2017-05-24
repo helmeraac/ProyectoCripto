@@ -10,13 +10,13 @@ class User < ApplicationRecord
   has_many :appointments
   belongs_to :admin
 
-  validates :name, presence: true, length: { in: 3..250 }
-  validates :lastname, length: { in: 3..250 }, allow_blank: true
-  validates :city, presence: true, length: { in: 3..200 }
-  validates :doc, presence: true, length: { in: 7..15 }
-  validates :address, presence: true, length: { in: 10..250 }
-  validates :phone, presence: true, length: { in: 7..10 }
-  validates :user_type, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 2 }
+  validates :name, presence: true, length: {in: 3..250}
+  validates :lastname, length: {in: 3..250}, allow_blank: true
+  validates :city, presence: true, length: {in: 3..200}
+  validates :doc, presence: true, length: {in: 7..15}
+  validates :address, presence: true, length: {in: 10..250}
+  validates :phone, presence: true, length: {in: 7..10}
+  validates :user_type, presence: true, numericality: {only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 2}
 
   def self.create_user_with_random_pass(user_params)
     user = User.new(user_params)
@@ -51,5 +51,9 @@ class User < ApplicationRecord
     self.password = generated_password
     self.password_confirmation = generated_password
     save
+  end
+
+  def send_devise_notification(notification, *args)
+    devise_mailer.send(notification, self, *args).deliver_later
   end
 end

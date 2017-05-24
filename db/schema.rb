@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170520234504) do
+ActiveRecord::Schema.define(version: 20170524025609) do
 
   create_table "admins", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -63,6 +63,12 @@ ActiveRecord::Schema.define(version: 20170520234504) do
     t.index ["post_id"], name: "index_categorizations_on_post_id"
   end
 
+  create_table "cities", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
     t.integer  "attempts",   default: 0, null: false
@@ -83,6 +89,7 @@ ActiveRecord::Schema.define(version: 20170520234504) do
     t.string   "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "phone"
   end
 
   create_table "pickup_requests", force: :cascade do |t|
@@ -98,14 +105,24 @@ ActiveRecord::Schema.define(version: 20170520234504) do
     t.index ["user_id"], name: "index_pickup_requests_on_user_id"
   end
 
+  create_table "post_images", force: :cascade do |t|
+    t.string   "image"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "post_id"
+    t.integer  "admin_id"
+    t.index ["admin_id"], name: "index_post_images_on_admin_id"
+    t.index ["post_id"], name: "index_post_images_on_post_id"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.string   "title"
-    t.datetime "published_date"
     t.string   "html_body"
     t.string   "header_img"
     t.integer  "admin_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "html_summary"
     t.index ["admin_id"], name: "index_posts_on_admin_id"
   end
 

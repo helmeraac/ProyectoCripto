@@ -6,16 +6,17 @@ class Admin < ApplicationRecord
   APPOINTMENTS = 1
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable,:recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable
   has_many :posts
+  has_many :post_images
   has_many :users
   belongs_to :lab
 
   # Validations
   validates :name, presence: true, length: {in: 3..150}
   validates :bio, length: {maximum: 500}
-  validates :permissions, numericality: { only_integer: true }
-  mount_uploader :photo , ImageUploader
+  validates :permissions, numericality: {only_integer: true}
+  mount_uploader :photo, ImageUploader
   validates_presence_of :lab
 
 
@@ -27,7 +28,7 @@ class Admin < ApplicationRecord
     adm
   end
 
-   def regenerate_password
+  def regenerate_password
     generated_password = Devise.friendly_token.first(8)
     self.password = generated_password
     self.password_confirmation = generated_password
@@ -37,5 +38,10 @@ class Admin < ApplicationRecord
   def get_processed_permissions
     admin_permissions(self)
   end
+
+  def send_devise_notification(notification, *args)
+    devise_mailer.send(notification, self, *args).deliver_later
+  end
+
   include AdminHelper
 end

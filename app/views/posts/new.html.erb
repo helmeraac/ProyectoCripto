@@ -1,0 +1,236 @@
+<% content_for :head do %>
+
+    <!-- Vendor CSS -->
+    <link href="/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+    <link href="/vendors/bower_components/sweetalert2/dist/sweetalert.css" rel="stylesheet">
+    <link href="/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+    <link href="/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+    <link href="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+    <link href="/vendors/summernote/dist/summernote.css" rel="stylesheet">
+
+    <!-- CSS -->
+    <link href="/css/app_1.min.css" rel="stylesheet">
+    <link href="/css/app_2.min.css" rel="stylesheet">
+
+
+<% end %>
+<% if defined? session[:error_notice] != nil %>
+    <input id="error_notice" type="text" name="error_notice" hidden="hidden" value="<%= session[:error_notice] %>">
+    <%= session[:error_notice] = nil %>
+<% end %>
+<% if defined? session[:success_notice] != nil %>
+    <input id="success_notice" type="text" name="success_notice" hidden="hidden" value="<%= session[:success_notice] %>">
+    <%= session[:success_notice] = nil %>
+<% end %>
+
+<%= render partial: 'layouts/console/header' %>
+
+<section id="main">
+
+  <%= render partial: 'layouts/console/sideBar' %>
+
+  <section id="content">
+    <div class="container">
+      <div class="block-header">
+        <h2>NOTICIAS</h2>
+      </div>
+
+      <div class="card" id="pickupLocation">
+
+        <form class="form-horizontal" role="form" method="POST" id="newForm" enctype="multipart/form-data">
+          <div class="card-header">
+            <h2>Nueva noticia
+            </h2>
+          </div>
+
+          <div class="card-body card-padding" style="padding-bottom: 0px;">
+            <div class="form-group">
+              <label for="title" class="col-sm-2 control-label">Título:</label>
+              <div class="col-sm-8">
+                <div class="fg-line">
+                  <input type="text" class="form-control input-sm" id="title"
+                         placeholder="Título de la noticia" name="post[title]" value="">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPhoto" class="col-sm-2 control-label">Imagen de Cabecera:</label>
+              <div class="col-sm-6">
+                <div class="fg-line">
+                  <div class="fileinput fileinput-new" data-provides="fileinput" id="inputPhoto">
+                    <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
+                    <div>
+                                        <span class="btn btn-info btn-file">
+                                            <span class="fileinput-new">Selecccionar imagen</span>
+                                            <input type="file" name="post[header_img]">
+                                        </span>
+                      <a href="#" class="btn btn-danger fileinput-exists"
+                         data-dismiss="fileinput">Eliminar</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="title" class="col-sm-2 control-label">Categorias:</label>
+              <div class="col-sm-8">
+                <div class="fg-line">
+                  <%=select("post", "category_ids", Category.all.collect {|l| [ l.name, l.id ]}, { include_blank: false},{:class => "selectpicker", :required => true,:multiple => true}) %>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="title" class="col-sm-2 control-label">Tags:</label>
+              <div class="col-sm-8">
+                <div class="fg-line">
+                  <div class="fg-line">
+                    <%=select("post", "tag_ids", Tag.all.collect {|l| [ l.name, l.id ]}, { include_blank: false},{:class => "selectpicker", :required => true,:multiple => true}) %>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          <div class="card-header">
+            <h2>Resumen de la Noticia
+            </h2>
+          </div>
+            <div class="summernote-editor-preview"></div>
+          <div class="card-header">
+            <h2>Contenido de la Noticia
+            </h2>
+          </div>
+            <div class="summernote-editor"></div>
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-3 text-center">
+                <button type="submit" id="submitEdit" class="btn btn-success btn-sm">Crear noticia</button>
+              </div>
+              <div class="col-sm-3 text-center">
+                <button type="button" class="btn btn-danger btn-sm" onclick="location.href = '/posts';">Cancelar</button>
+              </div>
+            </div>
+            <br>
+
+
+        </form>
+      </div>
+    </div>
+  </section>
+</section>
+
+<%= render partial: 'layouts/console/footer' %>
+<% content_for :bottom do %>
+    <!-- Javascript Libraries -->
+    <script src="/vendors/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="/vendors/bower_components/Waves/dist/waves.min.js"></script>
+    <script src="/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+    <script src="/vendors/bower_components/sweetalert2/dist/sweetalert.min.js"></script>
+    <script src="/vendors/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+    <script src="/vendors/fileinput/fileinput.min.js"></script>
+    <script src="/vendors/summernote/dist/summernote-updated.min.js"></script>
+
+
+
+    <!-- Placeholder for IE9 -->
+    <!--[if IE 9 ]>
+    <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+    <![endif]-->
+
+    <script src="/js/app.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.summernote-editor-preview').summernote({
+                height: 300,
+                toolbar: [
+                    [ 'style', [ 'style' ] ],
+                    [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
+                    [ 'fontname', [ 'fontname' ] ],
+                    [ 'fontsize', [ 'fontsize' ] ],
+                    [ 'color', [ 'color' ] ],
+                    [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
+                    [ 'table', [ 'table' ] ],
+                    [ 'insert', [ 'link'] ],
+                    [ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
+                ]
+            });
+            $('.summernote-editor').summernote({
+                height: 800,
+                onImageUpload: function (files) {
+                    sendFile(this, files[0]);
+                }
+            });
+
+
+            if ($('#error_notice').val()) {
+                swal({html: true, title: 'Error!', text: $('#error_notice').val(), type: "error"});
+            }
+            if ($('#success_notice').val()) {
+                swal({html: true, title: '', text: $('#success_notice').val(), type: "success"});
+            }
+        });
+
+
+        function sendFile(origin, file) {
+            var formData = new FormData();
+            formData.append('post_image[image]', file);
+            formData.append('post_image[admin_id]', <%=current_admin.id%>);
+            $.ajax({
+                url: "/post_images",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                type: "POST",
+
+                success: function (data) {
+                    img = document.createElement('IMG');
+                    img.src = data.url;
+                    img.setAttribute('class','uploaded_image');
+                    img.setAttribute('id',data.image_id);
+                    $(origin).summernote('insertNode', img);
+                }
+            });
+        }
+
+
+
+        $('#newForm').submit(function (e) {
+            var formData = new FormData($(this)[0]);
+            post_images = [];
+            images = $($.parseHTML($('.summernote-editor').code())).find(".uploaded_image");
+            Array.from(images).forEach(function(image){
+                post_images.push(image.id);
+            });
+            formData.append('post[html_body]', $('.summernote-editor').code());
+            formData.append('post[html_summary]', $('.summernote-editor-preview').code());
+            formData.append('post[html_body_images]', post_images);
+            $.ajax({
+                url: "/posts",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                type: "POST",
+
+                success: function (data) {
+                    swal({
+                        title: "",
+                        text: data.success,
+                        type: "success"
+                    }, function () {
+                        location.href = '/posts'
+                    });
+                },
+                error: function (data) {
+                    swal("", data.responseJSON.message, "error")
+                }
+            });
+            e.preventDefault();
+        });
+
+    </script>
+<% end %>

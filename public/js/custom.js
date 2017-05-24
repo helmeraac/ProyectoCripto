@@ -65,10 +65,15 @@ $(function() {
 	
 	// DOCTORS FILTERS
 	var $grid = $('#doctors-grid');
+	var initialGroup = $('#doctors-filter li a').attr('data-group');
+
 	$grid.shuffle({
 		itemSelector: '.doctors-grid', // the selector for the items in the grid
 		speed: 500 // Transition/animation speed (milliseconds)
 	});
+
+	$grid.shuffle('shuffle', initialGroup );
+
 	/* reshuffle when user clicks a filter item */
 	$('#doctors-filter li a').click(function (e) {
 		// set active class

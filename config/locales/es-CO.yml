@@ -2,6 +2,16 @@ es-CO:
   email_password_recovery:
     error: "El email no es válido o no ha sido encontrado en la base de datos"
   models:
+    category:
+      created: "La categoria fue creada exitosamente."
+      deleted: "La categoria ha sido eliminada correctamente"
+    tag:
+      created: "El tag ha sido creado exitosamente."
+      deleted: "El tag ha sido eliminado correctamente"
+    post:
+      created: "La noticia ha sido creada exitosamente."
+      deleted: "La noticia ha sido eliminada correctamente"
+      updated: "La noticia ha sido actualizada exitosamente."
     user:
       created: "El usuario fue creado exitosamente."
       updated: "El usuario fue actualizado exitosamente."
@@ -76,6 +86,16 @@ es-CO:
       lab:
         address: "La dirección"
         city: "La ciudad"
+        phone: "El Teléfono"
+      category:
+        name: "El Nombre"
+      tag:
+        name: "El Nombre"
+      post:
+        title: "El título"
+        html_body: "El cuerpo de la noticia"
+        html_summary: "El resumen de la noticia"
+        header_img: "La imagen de cabecera "
     errors:
       models:
         appointment:
@@ -128,18 +148,18 @@ es-CO:
       short: "%d de %b"
     month_names:
     -
-    - enero
-    - febrero
-    - marzo
-    - abril
-    - mayo
-    - junio
-    - julio
-    - agosto
-    - septiembre
-    - octubre
-    - noviembre
-    - diciembre
+    - Enero
+    - Febrero
+    - Marzo
+    - Abril
+    - Mayo
+    - Junio
+    - Julio
+    - Agosto
+    - Septiembre
+    - Octubre
+    - Noviembre
+    - Diciembre
     order:
     - :day
     - :month
@@ -303,3 +323,6 @@ es-CO:
   admin:
     failure:
       no_permissions: "No tiene permisos para acceder al módulo deseado"
+  will_paginate:
+    previous_label: "<<"
+    next_label: ">>"

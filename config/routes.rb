@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :post_images
   devise_for :admins, controllers: {passwords: 'admins/passwords'}
 
   devise_for :users
@@ -26,15 +27,15 @@ Rails.application.routes.draw do
   get 'pickup_requests/list/:user_id', to: 'pickup_requests#list'
   delete '/user_pickup_requests/:id', to: 'pickup_requests#user_destroy'
 
-  resources :appointments, except: [:index,:show] do
+  resources :appointments, except: [:index, :show] do
     member do
       put 'change_state', to: 'appointments#change_state_admin'
       put 'user_cancellation', to: 'appointments#change_state_user'
     end
   end
-  get 'appointments/confirmed' ,to:'appointments#index',defaults: {status: Appointment::CONFIRMED}
-  get 'appointments/canceled' ,to:'appointments#index',defaults: {status: Appointment::CANCELED}
-  get 'appointments/completed' ,to:'appointments#index',defaults: {status: Appointment::COMPLETED}
+  get 'appointments/confirmed', to: 'appointments#index', defaults: {status: Appointment::CONFIRMED}
+  get 'appointments/canceled', to: 'appointments#index', defaults: {status: Appointment::CANCELED}
+  get 'appointments/completed', to: 'appointments#index', defaults: {status: Appointment::COMPLETED}
   get 'appointments/list/:user_id', to: 'appointments#list'
 
   resources :results, except: [:update]
@@ -51,7 +52,13 @@ Rails.application.routes.draw do
   end
 
   resources :time_ranges, only: [:destroy]
-
+  resources :posts
+  get 'news/:page', to: 'posts#list', as: "all_posts"
+  get 'news/category/:category_id', to: 'posts#list_by_category', as: "category_posts"
+  get 'news/tag/:tag_id', to: 'posts#list_by_tag', as: "tag_posts"
+  resources :tags
+  resources :categories
+  get 'contact', to:'landing#contact',as:"contact"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: 'landing#index'
   get '/admin', to: 'landing#index_admin', as: 'admin_index'

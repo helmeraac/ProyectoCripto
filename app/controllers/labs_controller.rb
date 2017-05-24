@@ -26,7 +26,7 @@ class LabsController < ApplicationController
   # POST /labs
   # POST /labs.json
   def create
-    @lab = Lab.new(city: lab_params[:city], address: lab_params[:address])
+    @lab = Lab.new(lab_params)
     if @lab.save
       @schedule = Shedule.new(lab: @lab)
       if @schedule.save
@@ -69,7 +69,7 @@ class LabsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def lab_params
-    params.fetch(:lab, {}).permit(:city, :address, days: [], start_time: [], end_time: [])
+    params.fetch(:lab, {}).permit(:city, :address,:phone, days: [], start_time: [], end_time: [])
   end
 
   def lab_availability_params

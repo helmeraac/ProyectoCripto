@@ -6,7 +6,7 @@
             <div class="top-bar">
                 <div class="row">
                     <div class="col-sm-6 col-xs-12">
-                        <span>Opening Hours:</span>  Mon To Fri - 9:00 - 20:00, Sat &amp; Sun - 10:00 - 15:00
+                        <span>Horarios de Atención:</span>  Mon To Fri - 9:00 - 20:00, Sat &amp; Sun - 10:00 - 15:00
                     </div>
                     <div class="col-sm-6 col-xs-12">
                         <ul class="list-unstyled list-inline">
@@ -15,10 +15,10 @@
                                 care@yourhosptialsname.com
                             </a></li>-->
                              <% if current_user %>
-                                <li><%= current_user.name %></li>
+                                <li>Bienvenido(a) <%= current_user.name %> <%= current_user.lastname if !current_user.lastname.nil? %></li>
                                 <li><%= link_to('SALIR', destroy_user_session_path, :method => :delete) %></li>
                             <% else %>
-                                <li><a href="/users/sign_in">INGRESAR</a></li>
+                                <li><a href="/users/sign_in">SERVICIOS DE USUARIO</a></li>
                             <% end %>
                             <!--<li><i class="fa fa-phone"></i> Call Us: 1-800-123-4567</li>-->
                         </ul>
@@ -41,8 +41,9 @@
                     <!-- Collapse Button Ends -->
                     <!-- Logo Starts -->
                         <a href="/" class="navbar-brand">
-                            <i class="fa fa-heartbeat"></i>
-                            Hospitals
+                            <!--<i class="fa fa-heartbeat"></i>-->
+                            <!--Hospitals-->
+                            <img src="/img/logo.png" alt="" width="300px">
                         </a>
                     <!-- Logo Ends -->
                     </div>
@@ -50,52 +51,14 @@
                 <!-- Navbar Collapse Starts -->
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="services.html">Services</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    Doctors
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="doctors.html">Doctors</a></li>
-                                    <li><a href="doctor-profile.html">Doctor Profile</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    Pages
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="gallery.html">Gallery</a></li>
-                                    <li class=""><a href="faqs.html">Faq's</a></li>
-                                    <li><a href="typography.html">Typography</a></li>
-                                    <li><a href="404.html">404 Page</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    News
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="news.html">News</a></li>
-                                    <li><a href="news-single.html">News Single Post</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="contact.html">Contact</a></li>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/news/1">Noticias</a></li>
+                          <% if current_user %>
+                              <li><a href="/appointments/new">Citas</a></li>
+                              <li><a href="/users/<%=current_user.id%>/results">Resultados</a></li>
+                          <% end %>
                             <li><a href="/send_pickup_request">Muestras</a></li>
-                            <% if current_user %>
-                            <li class="dropdown active">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    Servicios usuario
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="/appointments/new">Citas</a></li>
-                                    <li><a href="/users/<%=current_user.id%>/results">Resultados</a></li>
-                                    <li><a href="/send_pickup_request">Muestras</a></li>
-                                </ul>
-                            </li>
-                            <% end %>
+                            <li><a href="/contact">Contáctanos</a></li>
                         </ul>
                     </div>
                 <!-- Navbar Collapse Ends -->
