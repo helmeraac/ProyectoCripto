@@ -19,14 +19,7 @@ class Appointment < ApplicationRecord
   # Minutes
   validates :status, presence: true, numericality: {only_integer: true, greaØter_than_or_equal_to: 0, less_than_or_equal_to: 2}
 
-  scope :find_by_user, ->(user_id) {where('user_id = ?', user_id)}
-  scope :find_by_user_and_status, ->(user_id, status) {where('user_id = ? and status = ?', user_id, status)}
-  scope :find_requested_by_date, -> (datetime) {where('date BETWEEN ? and ? and status = ?', datetime.beginning_of_day, datetime.end_of_day,Appointment::CONFIRMED)}
-  scope :find_by_lab, ->(lab_id) {where('lab_id = ?', lab_id)}
-  scope :find_by_status, ->(status) {where('status = ?', status)}
-  scope :find_to_reminder, ->(datetime) {where('status = ? and date BETWEEN ? and ?',Appointment::CONFIRMED,datetime.beginning_of_day, datetime.end_of_day)}
-  scope :find_by_lab_and_status, ->(lab_id, status) {where('lab_id = ? and status =?', lab_id, status)}
-
+  
   def status_string
     if status == 0
       'CONFIRMADA'
