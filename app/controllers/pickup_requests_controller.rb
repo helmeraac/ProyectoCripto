@@ -30,6 +30,7 @@ class PickupRequestsController < ApplicationController
   # POST /pickup_requests.json
   def create
     # Creates PR
+    begin
     @pickup_request = PickupRequest.new(pickup_request_params)
     @pickup_request.status = PickupRequest::PENDING
     @pickup_request.date = Date.strptime(pickup_request_params[:date], '%m/%d/%Y')
@@ -69,6 +70,10 @@ class PickupRequestsController < ApplicationController
       redirect_to root_path
     else
       session[:error_notice] = @pickup_request.errors.full_messages.join('<br/>')
+      render :new
+    end
+    rescue Exception => error
+      session[:error_notice] = "Ha ocurrido un error desconocido"
       render :new
     end
   end
