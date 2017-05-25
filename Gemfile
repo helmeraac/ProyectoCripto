@@ -81,3 +81,5 @@ gem 'whenever', :require => false
 
 #Pagination
 gem 'will_paginate'
+
+gem "devise_ldap_authenticatable"
